@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="500 - Server Error | AI Online Protractor"
+  description="Internal server error occurred on AI Online Protractor. Please reload or return to the homepage."
+  canonical="https://aionlineprotractor.com/500"
+  robots="noindex, follow"
+  currentPath="/500"
+>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center space-y-8 min-h-[70vh] flex flex-col items-center justify-center">
+    <!-- Mathematical 500 Visual Badge -->
+    <div class="relative">
+      <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center font-mono font-black text-3xl sm:text-4xl text-neutral-950 dark:text-white shadow-xs">
+        500
+      </div>
+      <div class="absolute -top-2 -right-2 px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-mono font-bold uppercase tracking-wider shadow-xs">
+        Server Error
+      </div>
+    </div>
+
+    <!-- Error Text -->
+    <div class="space-y-2 max-w-lg">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
+        Internal Server Calculation Error
+      </h1>
+      <p class="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+        Something unexpected happened while processing your request. Please try refreshing the page or returning to the homepage.
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+      <button
+        onclick="window.location.reload()"
+        class="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 text-xs sm:text-sm font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        <span>Reload Page</span>
+      </button>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors"
+      >
+        <span>Return to Homepage</span>
+      </a>
+      <a
+        href="/contact"
+        class="inline-flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-medium text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+      >
+        <span>Report Issue →</span>
+      </a>
+    </div>
+
+    <!-- Troubleshooting Help -->
+    <div class="w-full max-w-md pt-8 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-500 space-y-1">
+      <p>Error Code: <span class="font-mono text-neutral-700 dark:text-neutral-300">500_INTERNAL_SERVER_ERROR</span></p>
+      <p>If this issue persists, please clear your browser cache or report it on our <a href="/contact" class="text-blue-600 dark:text-blue-400 underline">Contact Page</a>.</p>
+    </div>
+  </div>
+</Layout>
