@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "aionlineprotractor",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy": "astro build && npx wrangler pages deploy dist",
+    "deploy": "astro build && npx wrangler pages deploy dist --project-name=aionlineprotractor --branch=main --commit-dirty=true",
     "astro": "astro"
   },
   "dependencies": {
