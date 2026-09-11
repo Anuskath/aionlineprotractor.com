@@ -68,6 +68,22 @@ const {
             </label>
           )}
 
+          {allowImageUpload && (
+            <button
+              id="open-camera-btn"
+              type="button"
+              class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors shadow-2xs"
+              title="Take a live photo with camera to measure an angle"
+            >
+              <svg class="w-4 h-4 text-neutral-600 dark:text-neutral-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0118.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>Take Photo</span>
+            </button>
+          )}
+          <input id="camera-file-fallback" type="file" accept="image/*" capture="environment" class="hidden" />
+
           <!-- AI Auto-Detect Angle Button -->
           <button
             id="auto-detect-btn"
@@ -270,6 +286,103 @@ const {
       </div>
     </div>
   </div>
+
+  <!-- Camera Live Capture Modal -->
+  <div
+    id="camera-modal"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-xs transition-all select-none"
+  >
+    <div class="relative w-full max-w-2xl bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden flex flex-col">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-neutral-200 dark:border-neutral-800">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">📸</span>
+          <div>
+            <h3 class="font-bold text-sm sm:text-base text-neutral-900 dark:text-white">Take Photo to Measure Angle</h3>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">Position the angle in the frame and click capture</p>
+          </div>
+        </div>
+        <button
+          id="close-camera-btn"
+          type="button"
+          class="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer text-base font-bold"
+          title="Close camera"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Live Video Viewport -->
+      <div class="relative w-full bg-black aspect-4/3 sm:aspect-16/10 flex items-center justify-center overflow-hidden">
+        <video
+          id="camera-video"
+          autoplay
+          playsinline
+          muted
+          class="w-full h-full object-cover"
+        ></video>
+
+        <!-- Centered Target Reticle / Alignment Circle -->
+        <div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-40">
+          <div class="w-24 h-24 border-2 border-dashed border-white/70 rounded-full flex items-center justify-center">
+            <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full shadow-[0_0_8px_#34d399]"></div>
+          </div>
+        </div>
+
+        <!-- Camera Error Notice Fallback -->
+        <div
+          id="camera-error-msg"
+          class="absolute inset-x-6 top-1/2 -translate-y-1/2 hidden bg-neutral-900/95 border border-rose-600/50 text-white text-sm p-6 rounded-2xl text-center space-y-3 z-10 shadow-xl"
+        >
+          <div class="text-2xl">📷</div>
+          <p class="font-semibold text-rose-300">Camera access is blocked or unavailable in this browser</p>
+          <p class="text-xs text-neutral-300">You can use your device's native camera photo picker instead.</p>
+          <button
+            id="camera-fallback-trigger-btn"
+            type="button"
+            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-xs cursor-pointer inline-flex items-center gap-2"
+          >
+            <span>📱 Choose / Take Photo with Phone Camera</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Footer Controls -->
+      <div class="flex items-center justify-between px-6 py-4 bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800">
+        <!-- Switch Camera Button -->
+        <button
+          id="switch-camera-btn"
+          type="button"
+          class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
+          title="Switch front and rear cameras"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Flip Camera</span>
+        </button>
+
+        <!-- Big Shutter Button -->
+        <button
+          id="capture-photo-btn"
+          type="button"
+          class="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white shadow-lg flex items-center justify-center transition-transform cursor-pointer border-4 border-white dark:border-neutral-900 ring-2 ring-emerald-500"
+          title="Capture photo now"
+        >
+          <div class="w-6 h-6 rounded-full bg-white shadow-inner"></div>
+        </button>
+
+        <!-- Cancel Button -->
+        <button
+          id="cancel-camera-btn"
+          type="button"
+          class="px-3 py-2 text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white cursor-pointer"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script is:inline define:vars={{ initialMode }}>
@@ -320,6 +433,21 @@ const {
     const pdfPrevBtn = document.getElementById('pdf-prev-btn');
     const pdfNextBtn = document.getElementById('pdf-next-btn');
     const pdfPageIndicator = document.getElementById('pdf-page-indicator');
+
+    // Camera Live Capture Elements & State
+    const openCameraBtn = document.getElementById('open-camera-btn');
+    const cameraModal = document.getElementById('camera-modal');
+    const closeCameraBtn = document.getElementById('close-camera-btn');
+    const cancelCameraBtn = document.getElementById('cancel-camera-btn');
+    const cameraVideo = document.getElementById('camera-video');
+    const capturePhotoBtn = document.getElementById('capture-photo-btn');
+    const switchCameraBtn = document.getElementById('switch-camera-btn');
+    const cameraErrorMsg = document.getElementById('camera-error-msg');
+    const cameraFileFallback = document.getElementById('camera-file-fallback');
+    const cameraFallbackTriggerBtn = document.getElementById('camera-fallback-trigger-btn');
+
+    let cameraStream = null;
+    let currentFacingMode = 'environment'; // default to rear world-facing camera for physical objects
 
     let currentPdfDoc = null;
     let currentPdfPage = 1;
@@ -435,6 +563,148 @@ const {
       }
     });
 
+    function showStatusToast(message) {
+      const toast = document.getElementById('ai-status-toast');
+      const toastMsg = document.getElementById('ai-toast-msg');
+      if (toast && toastMsg) {
+        toastMsg.textContent = message;
+        toast.classList.remove('hidden');
+        toast.classList.add('flex');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+          toast.classList.remove('flex');
+        }, 5000);
+      }
+    }
+
+    function applyLoadedImage(dataUrl, toastMessage) {
+      currentPdfDoc = null;
+      if (pdfControls) {
+        pdfControls.classList.add('hidden');
+        pdfControls.classList.remove('flex');
+      }
+      if (uploadedPreviewImg) {
+        uploadedPreviewImg.src = dataUrl;
+        uploadedPreviewImg.classList.remove('hidden');
+        clearImgBtn?.classList.remove('hidden');
+        autoDetectBtn?.classList.remove('hidden');
+      }
+      if (toastMessage) {
+        showStatusToast(toastMessage);
+      }
+    }
+
+    // Camera Lifecycle Functions
+    async function startCamera() {
+      if (cameraStream) {
+        stopCamera();
+      }
+      cameraErrorMsg?.classList.add('hidden');
+      try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error('getUserMedia not supported in this browser');
+        }
+        const constraints = {
+          video: {
+            facingMode: { ideal: currentFacingMode },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          },
+          audio: false,
+        };
+        cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+        if (cameraVideo) {
+          cameraVideo.srcObject = cameraStream;
+          await cameraVideo.play();
+        }
+      } catch (err) {
+        console.warn('Camera stream error:', err);
+        if (cameraErrorMsg) {
+          cameraErrorMsg.classList.remove('hidden');
+        }
+      }
+    }
+
+    function stopCamera() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach((track) => track.stop());
+        cameraStream = null;
+      }
+      if (cameraVideo) {
+        cameraVideo.srcObject = null;
+      }
+    }
+
+    function openCameraModal() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        cameraFileFallback?.click();
+        return;
+      }
+      cameraModal?.classList.remove('hidden');
+      cameraModal?.classList.add('flex');
+      startCamera();
+    }
+
+    function closeCameraModal() {
+      stopCamera();
+      cameraModal?.classList.add('hidden');
+      cameraModal?.classList.remove('flex');
+    }
+
+    openCameraBtn?.addEventListener('click', openCameraModal);
+    closeCameraBtn?.addEventListener('click', closeCameraModal);
+    cancelCameraBtn?.addEventListener('click', closeCameraModal);
+
+    // Keyboard ESC listener and backdrop click to dismiss
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && cameraModal && !cameraModal.classList.contains('hidden')) {
+        closeCameraModal();
+      }
+    });
+
+    cameraModal?.addEventListener('click', (e) => {
+      if (e.target === cameraModal) {
+        closeCameraModal();
+      }
+    });
+
+    switchCameraBtn?.addEventListener('click', () => {
+      currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+      startCamera();
+    });
+
+    cameraFallbackTriggerBtn?.addEventListener('click', () => {
+      closeCameraModal();
+      cameraFileFallback?.click();
+    });
+
+    // Capture photo from video stream
+    capturePhotoBtn?.addEventListener('click', () => {
+      if (!cameraVideo || !cameraVideo.videoWidth) return;
+      const canvas = document.createElement('canvas');
+      canvas.width = cameraVideo.videoWidth;
+      canvas.height = cameraVideo.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+      applyLoadedImage(dataUrl, '📸 Photo captured! Click "✨ AI Auto-Detect Angle" or drag handles to measure.');
+      closeCameraModal();
+    });
+
+    // Fallback file input change (native camera shutter on phone)
+    cameraFileFallback?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          applyLoadedImage(event.target.result, '📸 Photo loaded! Click "✨ AI Auto-Detect Angle" or drag handles to measure.');
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
     clearImgBtn?.addEventListener('click', () => {
       if (uploadedPreviewImg) {
         uploadedPreviewImg.src = '';
@@ -448,6 +718,7 @@ const {
       }
       currentPdfDoc = null;
       if (imageLoader) imageLoader.value = '';
+      if (cameraFileFallback) cameraFileFallback.value = '';
     });
 
     // In-Browser Computer Vision Diagram Angle Analyzer

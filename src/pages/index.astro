@@ -4,6 +4,8 @@ import ProtractorApp from '../components/ProtractorApp.astro';
 import HomeSeoArticle from '../components/HomeSeoArticle.astro';
 import AngleKnowledge from '../components/AngleKnowledge.astro';
 
+import { faqs } from '../data/faqs';
+
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -63,40 +65,14 @@ const jsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'How do I use this online protractor to measure an angle on my screen?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Simply drag the black center vertex to align with the vertex of the angle you wish to measure. Then drag the green ray along the baseline, and drag the blue ray along the second arm. The exact angle readout in degrees, radians, and slope is displayed in real-time.',
-        },
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
       },
-      {
-        '@type': 'Question',
-        name: 'Can I upload an image or PDF blueprint to measure angles directly on it?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Yes! Click the Upload Image / PDF button in the toolbar to upload any JPG, PNG, WebP, or multi-page PDF file. Your file will appear directly beneath the interactive protractor with adjustable opacity and zoom.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'What is the difference between a 180° and online protractor 360?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'A standard 180-degree protractor is a semi-circle tool for acute, right, and obtuse angles up to 180°. An online protractor 360 is a full circular instrument that allows seamless measurement of reflex angles and compass bearings without manual supplement subtraction.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Is this free online protractor accurate on mobile phones and tablets?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Yes, our online protractor is built with responsive SVG vector geometry and full multi-touch pointer support. It scales accurately across all iOS and Android smartphone displays.',
-        },
-      },
-    ],
+    })),
   },
 ];
 ---

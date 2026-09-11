@@ -1,4 +1,6 @@
 ---
+import { faqs } from '../data/faqs';
+
 // Comprehensive Angle Knowledge Base & FAQs for SEO and AdSense High-Value Content
 const angleTypes = [
   {
@@ -36,29 +38,6 @@ const angleTypes = [
     range: 'θ = 360° (2π rad)',
     description: 'A complete circular rotation where the terminal ray coincides with the initial ray.',
     color: 'neutral',
-  },
-];
-
-const faqs = [
-  {
-    q: 'How do I use this online protractor to measure an angle on my screen?',
-    a: 'Simply drag the black center vertex to align with the vertex of the angle you wish to measure. Then drag the green ray (Ray 1) along the baseline of the angle, and drag the blue ray (Ray 2) along the second arm. The exact angle readout in degrees, radians, and slope is displayed in real-time.',
-  },
-  {
-    q: 'Can I upload an image or blueprint to measure angles directly on it?',
-    a: 'Yes! Click the "Upload Image" button in the toolbar to upload any JPG, PNG, WebP, or SVG file. Your image will appear directly beneath the interactive protractor. Use the transparency slider to adjust the protractor opacity so you can trace drawing angles with sub-pixel precision.',
-  },
-  {
-    q: 'What is the difference between a 180° and 360° protractor?',
-    a: 'A standard 180-degree protractor is a semi-circle tool primarily used for acute, right, and obtuse angles. A 360-degree protractor is a full circular instrument that allows seamless measurement of reflex angles and full-circle bearings without needing to calculate supplements.',
-  },
-  {
-    q: 'Is this online protractor accurate on mobile phones and tablets?',
-    a: 'Yes, our online protractor is built with responsive SVG vector geometry and full multi-touch pointer support. It scales smoothly to any screen resolution, from high-density Retina displays to mobile phones and iPads.',
-  },
-  {
-    q: 'How do complementary and supplementary angles work?',
-    a: 'Two angles are complementary if their sum equals 90 degrees (e.g., 30° and 60°). Two angles are supplementary if their sum equals 180 degrees (e.g., 45° and 135°). Our live inspector automatically computes both values for you instantly.',
   },
 ];
 ---
@@ -166,11 +145,11 @@ const faqs = [
       {faqs.map((faq) => (
         <details class="group p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition-all [&_summary::-webkit-details-marker]:hidden">
           <summary class="flex items-center justify-between cursor-pointer font-semibold text-base sm:text-lg text-neutral-900 dark:text-neutral-100 gap-4">
-            <span>{faq.q}</span>
+            <span>{faq.question}</span>
             <span class="transition-transform group-open:rotate-180 text-neutral-400 text-sm">▼</span>
           </summary>
           <p class="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 mt-3 pt-3 border-t border-neutral-100 dark:border-neutral-800 leading-relaxed">
-            {faq.a}
+            {faq.answer}
           </p>
         </details>
       ))}
