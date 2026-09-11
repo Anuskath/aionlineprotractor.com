@@ -1,15 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ProtractorApp from '../components/ProtractorApp.astro';
+import HomeSeoArticle from '../components/HomeSeoArticle.astro';
 import AngleKnowledge from '../components/AngleKnowledge.astro';
 
 const jsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'AI Online Protractor',
+    name: 'Online Protractor - Free Online Protractor Tool & Angle Finder',
     url: 'https://aionlineprotractor.com/',
-    description: 'Free online protractor tool to measure angles in degrees and radians on screen or from uploaded images.',
+    description:
+      'Free online protractor and angle finder tool to measure angles in degrees and radians. Features 180° & online protractor 360, image & PDF upload, and student practice.',
     applicationCategory: 'UtilitiesApplication',
     operatingSystem: 'Any Web Browser',
     offers: {
@@ -18,11 +20,44 @@ const jsonLd = [
       priceCurrency: 'USD',
     },
     featureList: [
-      'Interactive 180-degree and 360-degree protractor',
-      'Dual degree ticks with sub-pixel ray dragging',
-      'Image upload blueprint angle measurement',
-      'Instant radians, gradians, and slope calculation',
-      'Mobile touch responsive design with dark mode',
+      'Interactive 180-degree semi-circle and 360-degree full circle online protractor',
+      'Free online protractor tool and angle maker with sub-pixel ray dragging',
+      'Angle finder calculator with instant radians, gradians, slope gradient, and classifications',
+      'Image and PDF blueprint angle finder with client-side privacy',
+      'In-browser AI auto-detect angle with computer vision line scanning',
+      'Online protractor practice tool for students and classrooms',
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'How to Measure Angles Using an Online Protractor Tool',
+    description: 'Learn how to measure angles accurately on your computer screen, mobile device, or uploaded PDF/image.',
+    step: [
+      {
+        '@type': 'HowToStep',
+        name: 'Align the Center Vertex',
+        text: 'Click and drag the central black handle to position the origin point directly over the corner vertex of the angle.',
+        position: 1,
+      },
+      {
+        '@type': 'HowToStep',
+        name: 'Set Baseline Ray (Ray 1)',
+        text: 'Drag the green handle along the initial baseline arm or horizontal reference line of your angle.',
+        position: 2,
+      },
+      {
+        '@type': 'HowToStep',
+        name: 'Rotate the Measuring Ray (Ray 2)',
+        text: 'Drag the blue handle along the terminal arm. The shaded blue circular sector displays the enclosed angle in real time.',
+        position: 3,
+      },
+      {
+        '@type': 'HowToStep',
+        name: 'Read & Copy Angle Results',
+        text: 'Read the live degrees, radians, slope percentage, and angle classification. Click Copy Result to save to clipboard.',
+        position: 4,
+      },
     ],
   },
   {
@@ -34,31 +69,31 @@ const jsonLd = [
         name: 'How do I use this online protractor to measure an angle on my screen?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Simply drag the black center vertex to align with the vertex of the angle you wish to measure. Then drag the green ray along the baseline, and drag the blue ray along the second arm. The exact angle readout in degrees and radians is displayed in real-time.',
+          text: 'Simply drag the black center vertex to align with the vertex of the angle you wish to measure. Then drag the green ray along the baseline, and drag the blue ray along the second arm. The exact angle readout in degrees, radians, and slope is displayed in real-time.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Can I upload an image or blueprint to measure angles directly on it?',
+        name: 'Can I upload an image or PDF blueprint to measure angles directly on it?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! Click the Upload Image button in the toolbar to upload any JPG, PNG, WebP, or SVG file. Your image will appear directly beneath the interactive protractor with adjustable opacity.',
+          text: 'Yes! Click the Upload Image / PDF button in the toolbar to upload any JPG, PNG, WebP, or multi-page PDF file. Your file will appear directly beneath the interactive protractor with adjustable opacity and zoom.',
         },
       },
       {
         '@type': 'Question',
-        name: 'What is the difference between a 180° and 360° protractor?',
+        name: 'What is the difference between a 180° and online protractor 360?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'A standard 180-degree protractor is a semi-circle tool for acute, right, and obtuse angles. A 360-degree protractor is a full circular instrument that allows seamless measurement of reflex angles and compass bearings.',
+          text: 'A standard 180-degree protractor is a semi-circle tool for acute, right, and obtuse angles up to 180°. An online protractor 360 is a full circular instrument that allows seamless measurement of reflex angles and compass bearings without manual supplement subtraction.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Is this online protractor accurate on mobile phones and tablets?',
+        name: 'Is this free online protractor accurate on mobile phones and tablets?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes, our online protractor is built with responsive SVG vector geometry and full multi-touch pointer support. It scales accurately to any device display.',
+          text: 'Yes, our online protractor is built with responsive SVG vector geometry and full multi-touch pointer support. It scales accurately across all iOS and Android smartphone displays.',
         },
       },
     ],
@@ -67,17 +102,19 @@ const jsonLd = [
 ---
 
 <Layout
-  title="AI Online Protractor - Free Screen Protractor & Angle Finder"
-  description="Measure angles online with high precision. Interactive 180° & 360° screen protractor with image upload measuring, angle classifications, radians, and slope conversions."
+  title="Online Protractor - Free Online Protractor Tool & Angle Finder"
+  description="Free online protractor and angle finder tool to measure angles in degrees and radians. Features 180° & online protractor 360, image & PDF upload, and student practice."
+  keywords="online protractor, online protractor tool, online protractor practice, online protractor tool for students, online protractor and angle maker, free online protractor, angle finder, angle finder tool, angle finder calculator, online protractor angle finder, online protractor 360"
   canonical="https://aionlineprotractor.com"
   jsonLd={jsonLd}
   currentPath="/"
 >
   <ProtractorApp
     initialMode="180"
-    pageTitle="AI Online Protractor"
-    pageSubtitle="Measure angles directly on your screen or upload drawings, blueprints, and homework photos."
+    pageTitle="Online Protractor"
+    pageSubtitle="Free online protractor tool & angle finder. Measure angles on screen or upload drawings, blueprints, and homework photos."
     allowImageUpload={true}
   />
+  <HomeSeoArticle />
   <AngleKnowledge />
 </Layout>

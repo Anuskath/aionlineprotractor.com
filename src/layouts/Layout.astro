@@ -6,14 +6,16 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  keywords?: string;
   canonical?: string;
   jsonLd?: Record<string, any> | Record<string, any>[];
   currentPath?: string;
 }
 
 const {
-  title = 'AI Online Protractor - Free Precision Digital Angle Measurement Tool',
-  description = 'Free online protractor tool to measure angles in degrees and radians. Features 180° & 360° protractors, image upload measuring, 3-point angle solver, and mobile tilt inclinometer.',
+  title = 'Online Protractor - Free Online Protractor Tool & Angle Finder',
+  description = 'Free online protractor tool to measure angles in degrees and radians. Features 180° & 360° protractors, image and PDF upload measuring, and angle practice for students.',
+  keywords = 'online protractor, online protractor tool, online protractor practice, online protractor tool for students, online protractor and angle maker, free online protractor, angle finder, angle finder tool, angle finder calculator, online protractor angle finder, online protractor 360',
   canonical = 'https://aionlineprotractor.com',
   jsonLd,
   currentPath = '/',
@@ -30,21 +32,28 @@ const canonicalUrl = canonical.startsWith('http') ? canonical : `${siteUrl}${can
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph / Social Meta -->
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="AI Online Protractor" />
     <meta property="og:image" content={`${siteUrl}/og-image.svg`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
 
     <!-- Twitter Meta -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${siteUrl}/og-image.svg`} />
+    <meta name="twitter:image:alt" content={title} />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
