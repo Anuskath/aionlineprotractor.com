@@ -1,25 +1,34 @@
 ---
-// Comprehensive 800-1200 word On-Page SEO Article for 'Online Protractor' and supporting keywords
+import { getSEOData } from '../i18n/seo';
+import { DEFAULT_LANGUAGE } from '../i18n/languages';
+
+interface Props {
+  lang?: string;
+}
+
+const { lang = DEFAULT_LANGUAGE } = Astro.props;
+const seo = getSEOData(lang);
+const isEnglish = lang === DEFAULT_LANGUAGE;
 ---
 
 <article class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-neutral-800 dark:text-neutral-200 border-t border-neutral-200 dark:border-neutral-800">
-  <div class="space-y-12">
-
-    <!-- Section 1: Introduction to the Online Protractor -->
-    <section class="space-y-4">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900 text-xs font-mono font-semibold text-emerald-700 dark:text-emerald-300">
-        <span>📐 Complete Guide & Reference</span>
-      </div>
-      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-950 dark:text-white">
-        The Ultimate Online Protractor: Precision Digital Angle Measurement
-      </h2>
-      <p class="text-base sm:text-lg leading-relaxed text-neutral-600 dark:text-neutral-300">
-        In the digital era of remote learning and digital design, measuring angles on screen should not require a plastic ruler. An <strong>online protractor</strong> is an interactive, browser-based instrument built to calculate, draw, and inspect geometric angles directly on your screen. Whether measuring an unknown angle on an uploaded blueprint, checking geometry homework, or calculating roof pitch, our <strong>free online protractor</strong> delivers high precision with no installation required.
-      </p>
-      <p class="text-base leading-relaxed text-neutral-600 dark:text-neutral-300">
-        Physical protractors often suffer from parallax errors, scratched degree marks, and alignment slips. In contrast, this modern <strong>online protractor tool</strong> uses vector SVG geometry and sub-pixel coordinate tracking. Providing live readouts in degrees, radians, and gradient slope, it functions as a fast <strong>angle finder</strong>, angle generator, and trigonometry tool for mobile, tablet, and desktop screens.
-      </p>
-    </section>
+  {isEnglish ? (
+    <div class="space-y-12">
+      <!-- Section 1: Introduction to the Online Protractor -->
+      <section class="space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900 text-xs font-mono font-semibold text-emerald-700 dark:text-emerald-300">
+          <span>📐 Complete Guide & Reference</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-950 dark:text-white">
+          The Ultimate Online Protractor: Precision Digital Angle Measurement
+        </h2>
+        <p class="text-base sm:text-lg leading-relaxed text-neutral-600 dark:text-neutral-300">
+          In the digital era of remote learning and digital design, measuring angles on screen should not require a plastic ruler. An <strong>online protractor</strong> is an interactive, browser-based instrument built to calculate, draw, and inspect geometric angles directly on your screen. Whether measuring an unknown angle on an uploaded blueprint, checking geometry homework, or calculating roof pitch, our <strong>free online protractor</strong> delivers high precision with no installation required.
+        </p>
+        <p class="text-base leading-relaxed text-neutral-600 dark:text-neutral-300">
+          Physical protractors often suffer from parallax errors, scratched degree marks, and alignment slips. In contrast, this modern <strong>online protractor tool</strong> uses vector SVG geometry and sub-pixel coordinate tracking. Providing live readouts in degrees, radians, and gradient slope, it functions as a fast <strong>angle finder</strong>, angle generator, and trigonometry tool for mobile, tablet, and desktop screens.
+        </p>
+      </section>
 
     <!-- Section 2: Key Capabilities & Angle Maker -->
     <section class="space-y-4">
@@ -242,6 +251,86 @@
         </div>
       </div>
     </section>
-
   </div>
+  ) : (
+    <div class="space-y-12">
+      <!-- Section 1: Intro -->
+      <section class="space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900 text-xs font-mono font-semibold text-emerald-700 dark:text-emerald-300">
+          <span>📐 {seo.h1}</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-950 dark:text-white">
+          {seo.h1}
+        </h2>
+        <p class="text-base sm:text-lg leading-relaxed text-neutral-600 dark:text-neutral-300">
+          {seo.lead}
+        </p>
+      </section>
+
+      <!-- Section 2: Features -->
+      <section class="space-y-4">
+        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-neutral-950 dark:text-white">
+          {seo.featuresTitle}
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          {seo.features.map((f) => (
+            <div class="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs">
+              <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1.5">{f.title}</h3>
+              <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 3: Modes -->
+      <section class="space-y-4">
+        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-neutral-950 dark:text-white">
+          {seo.modesTitle}
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs">
+            <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1.5">{seo.mode180Title}</h3>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{seo.mode180Desc}</p>
+          </div>
+          <div class="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs">
+            <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1.5">{seo.mode360Title}</h3>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{seo.mode360Desc}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: How To -->
+      <section class="space-y-4">
+        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-neutral-950 dark:text-white">
+          {seo.howToTitle}
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+          {seo.steps.map((s, idx) => (
+            <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+              <div class="w-7 h-7 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 flex items-center justify-center font-bold text-xs mb-3">
+                {idx + 1}
+              </div>
+              <h3 class="font-bold text-sm text-neutral-900 dark:text-white mb-1">{s.title}</h3>
+              <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 5: FAQs -->
+      <section class="space-y-4">
+        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-neutral-950 dark:text-white">
+          {seo.faqsTitle}
+        </h2>
+        <div class="space-y-3 pt-2">
+          {seo.faqs.map((faq) => (
+            <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+              <h3 class="font-bold text-sm sm:text-base text-neutral-900 dark:text-white mb-1.5">{faq.q}</h3>
+              <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  )}
 </article>

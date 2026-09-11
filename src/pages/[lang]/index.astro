@@ -1,0 +1,86 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProtractorApp from '../../components/ProtractorApp.astro';
+import HomeSeoArticle from '../../components/HomeSeoArticle.astro';
+import { NON_DEFAULT_LANGUAGES, LANGUAGES } from '../../i18n/languages';
+import { getSEOData } from '../../i18n/seo';
+import { useTranslations } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return NON_DEFAULT_LANGUAGES.map((lang) => ({
+    params: { lang },
+  }));
+}
+
+const { lang } = Astro.params as { lang: string };
+const seo = getSEOData(lang);
+const t = useTranslations(lang);
+const langInfo = LANGUAGES[lang];
+
+const canonical = `https://aionlineprotractor.com/${lang}/`;
+
+// Localized Structured Data
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: seo.title,
+    url: canonical,
+    description: seo.description,
+    inLanguage: lang,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any Web Browser',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    featureList: seo.features.map((f) => `${f.title}: ${f.desc}`),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: seo.howToTitle,
+    description: seo.lead,
+    inLanguage: lang,
+    step: seo.steps.map((s, idx) => ({
+      '@type': 'HowToStep',
+      name: s.title,
+      text: s.desc,
+      position: idx + 1,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: lang,
+    mainEntity: seo.faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.a,
+      },
+    })),
+  },
+];
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonical={canonical}
+  currentPath={`/${lang}/`}
+  lang={lang}
+  jsonLd={jsonLd}
+>
+  <ProtractorApp
+    initialMode="180"
+    allowImageUpload={true}
+    pageTitle={seo.h1}
+    pageSubtitle={seo.lead}
+    lang={lang}
+  />
+  <HomeSeoArticle lang={lang} />
+</Layout>

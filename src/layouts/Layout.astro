@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from '../i18n/languages';
 import '../styles/global.css';
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
   robots?: string;
   jsonLd?: Record<string, any> | Record<string, any>[];
   currentPath?: string;
+  lang?: string;
 }
 
 const {
@@ -21,14 +23,34 @@ const {
   robots = 'index, follow',
   jsonLd,
   currentPath = '/',
+  lang = DEFAULT_LANGUAGE,
 } = Astro.props;
 
 const siteUrl = 'https://aionlineprotractor.com';
 const canonicalUrl = canonical.startsWith('http') ? canonical : `${siteUrl}${canonical}`;
+
+// Calculate root path for hreflang links
+const pathSegments = currentPath.split('/').filter(Boolean);
+const hasLocalePrefix = SUPPORTED_LANGUAGES.includes(pathSegments[0]) && pathSegments[0] !== DEFAULT_LANGUAGE;
+const rawPath = hasLocalePrefix ? '/' + pathSegments.slice(1).join('/') : currentPath;
+const normalizedPath = rawPath === '/' || rawPath === '' ? '/' : (rawPath.endsWith('/') ? rawPath : `${rawPath}/`);
+
+// OG Locales mapping
+const OG_LOCALES: Record<string, string> = {
+  en: 'en_US',
+  es: 'es_ES',
+  pt: 'pt_BR',
+  fr: 'fr_FR',
+  de: 'de_DE',
+  ja: 'ja_JP',
+  ko: 'ko_KR',
+  it: 'it_IT',
+};
+const currentOgLocale = OG_LOCALES[lang] || 'en_US';
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
   <head>
     <!-- Google tag (gtag.js) -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-4W3QWFP43D"></script>
@@ -48,9 +70,23 @@ const canonicalUrl = canonical.startsWith('http') ? canonical : `${siteUrl}${can
     <meta name="robots" content={robots} />
     <link rel="canonical" href={canonicalUrl} />
 
+    <!-- Hreflang Alternate Links for International SEO -->
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${normalizedPath}`} />
+    <link rel="alternate" hreflang="en" href={`${siteUrl}${normalizedPath}`} />
+    <link rel="alternate" hreflang="es" href={`${siteUrl}/es${normalizedPath === '/' ? '/' : normalizedPath}`} />
+    <link rel="alternate" hreflang="pt" href={`${siteUrl}/pt${normalizedPath === '/' ? '/' : normalizedPath}`} />
+    <link rel="alternate" hreflang="fr" href={`${siteUrl}/fr${normalizedPath === '/' ? '/' : normalizedPath}`} />
+    <link rel="alternate" hreflang="de" href={`${siteUrl}/de${normalizedPath === '/' ? '/' : normalizedPath}`} />
+    <link rel="alternate" hreflang="ja" href={`${siteUrl}/ja${normalizedPath === '/' ? '/' : normalizedPath}`} />
+    <link rel="alternate" hreflang="ko" href={`${siteUrl}/ko${normalizedPath === '/' ? '/' : normalizedPath}`} />
+    <link rel="alternate" hreflang="it" href={`${siteUrl}/it${normalizedPath === '/' ? '/' : normalizedPath}`} />
+
     <!-- Open Graph / Social Meta -->
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={currentOgLocale} />
+    {Object.entries(OG_LOCALES).filter(([l]) => l !== lang).map(([_, locale]) => (
+      <meta property="og:locale:alternate" content={locale} />
+    ))}
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -88,10 +124,10 @@ const canonicalUrl = canonical.startsWith('http') ? canonical : `${siteUrl}${can
     )}
   </head>
   <body class="flex flex-col min-h-screen bg-[#fafafa] dark:bg-black text-[#171717] dark:text-[#ededed] antialiased selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-black">
-    <Header currentPath={currentPath} />
+    <Header currentPath={currentPath} lang={lang} />
     <main class="flex-1 w-full">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
   </body>
 </html>

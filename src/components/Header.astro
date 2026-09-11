@@ -1,23 +1,36 @@
 ---
+import { LANGUAGES, SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from '../i18n/languages';
+import { useTranslations, getLocalizedPath } from '../i18n/ui';
+
 interface Props {
   currentPath?: string;
+  lang?: string;
 }
 
-const { currentPath = '/' } = Astro.props;
+const { currentPath = '/', lang = DEFAULT_LANGUAGE } = Astro.props;
+const t = useTranslations(lang);
+
+// Calculate root path for language switcher links
+const pathSegments = currentPath.split('/').filter(Boolean);
+const hasLocalePrefix = SUPPORTED_LANGUAGES.includes(pathSegments[0]) && pathSegments[0] !== DEFAULT_LANGUAGE;
+const rawPath = hasLocalePrefix ? '/' + pathSegments.slice(1).join('/') : currentPath;
+const normalizedPath = rawPath === '' ? '/' : rawPath;
 
 const navLinks = [
-  { href: '/', label: '180° Protractor' },
-  { href: '/360-protractor', label: '360° Full Circle' },
-  { href: '/measure-angle-image', label: 'Image Angle Finder' },
-  { href: '/three-point-angle', label: '3-Point Angle' },
-  { href: '/inclinometer', label: 'Inclinometer (Tilt)' },
+  { href: getLocalizedPath('/', lang), label: t.nav180, activeMatch: '/' },
+  { href: getLocalizedPath('/360-protractor', lang), label: t.nav360, activeMatch: '/360-protractor' },
+  { href: getLocalizedPath('/measure-angle-image', lang), label: t.navImage, activeMatch: '/measure-angle-image' },
+  { href: getLocalizedPath('/three-point-angle', lang), label: t.nav3Point, activeMatch: '/three-point-angle' },
+  { href: getLocalizedPath('/inclinometer', lang), label: t.navInclinometer, activeMatch: '/inclinometer' },
 ];
+
+const homeHref = getLocalizedPath('/', lang);
 ---
 
 <header class="sticky top-0 z-50 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-neutral-950/90 backdrop-blur-md transition-colors">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-2.5 group">
+    <a href={homeHref} class="flex items-center gap-2.5 group">
       <div class="w-8 h-8 rounded-lg bg-neutral-950 dark:bg-white text-white dark:text-neutral-950 flex items-center justify-center font-bold text-sm shadow-xs transition-transform group-hover:scale-105">
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M2 12a10 10 0 0 1 20 0Z" />
@@ -35,7 +48,7 @@ const navLinks = [
     <!-- Desktop Navigation Links -->
     <nav class="hidden lg:flex items-center gap-1.5">
       {navLinks.map((link) => {
-        const isActive = currentPath === link.href;
+        const isActive = normalizedPath === link.activeMatch;
         return (
           <a
             href={link.href}
@@ -51,8 +64,42 @@ const navLinks = [
       })}
     </nav>
 
-    <!-- Actions & Theme Toggle -->
+    <!-- Actions, Language Selector & Theme Toggle -->
     <div class="flex items-center gap-2">
+      <!-- Language Selector Dropdown -->
+      <div class="relative" id="lang-dropdown-wrapper">
+        <button
+          id="lang-menu-btn"
+          type="button"
+          aria-label="Select Language"
+          class="h-9 px-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 flex items-center gap-1.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+        >
+          <span class="text-sm">{LANGUAGES[lang]?.flag || '🌐'}</span>
+          <span class="hidden sm:inline uppercase">{lang}</span>
+          <svg class="w-3.5 h-3.5 text-neutral-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <div
+          id="lang-menu"
+          class="hidden absolute right-0 mt-1.5 w-44 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xl py-1.5 z-50 text-xs"
+        >
+          {Object.values(LANGUAGES).map((item) => (
+            <a
+              href={getLocalizedPath(normalizedPath, item.code)}
+              class={`flex items-center gap-2 px-3 py-2 transition-colors ${
+                item.code === lang
+                  ? 'bg-neutral-100 dark:bg-neutral-800 font-bold text-neutral-900 dark:text-white'
+                  : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+              }`}
+            >
+              <span class="text-base">{item.flag}</span>
+              <span>{item.nativeName}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
       <!-- Dark Mode Toggle Button -->
       <button
         id="theme-toggle"
@@ -98,7 +145,7 @@ const navLinks = [
       <a
         href={link.href}
         class={`block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${
-          currentPath === link.href
+          normalizedPath === link.activeMatch
             ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-950'
             : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900'
         }`}
@@ -110,6 +157,20 @@ const navLinks = [
 </header>
 
 <script is:inline>
+  // Language Dropdown toggle
+  const langBtn = document.getElementById('lang-menu-btn');
+  const langMenu = document.getElementById('lang-menu');
+  langBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    langMenu?.classList.toggle('hidden');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!langMenu?.contains(e.target) && e.target !== langBtn) {
+      langMenu?.classList.add('hidden');
+    }
+  });
+
   // Mobile menu toggle
   const mobileBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');

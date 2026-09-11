@@ -1,4 +1,12 @@
 ---
+import { DEFAULT_LANGUAGE } from '../i18n/languages';
+import { getLocalizedPath } from '../i18n/ui';
+
+interface Props {
+  lang?: string;
+}
+
+const { lang = DEFAULT_LANGUAGE } = Astro.props;
 const currentYear = new Date().getFullYear();
 ---
 
@@ -29,11 +37,11 @@ const currentYear = new Date().getFullYear();
       <div class="space-y-3">
         <h4 class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-900 dark:text-white">Angle Tools</h4>
         <ul class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
-          <li><a href="/" class="hover:text-neutral-950 dark:hover:text-white transition-colors">180° Online Protractor</a></li>
-          <li><a href="/360-protractor" class="hover:text-neutral-950 dark:hover:text-white transition-colors">360° Full Circle Protractor</a></li>
-          <li><a href="/measure-angle-image" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Image Angle Finder</a></li>
-          <li><a href="/three-point-angle" class="hover:text-neutral-950 dark:hover:text-white transition-colors">3-Point Coordinate Angle</a></li>
-          <li><a href="/inclinometer" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Digital Inclinometer (Tilt)</a></li>
+          <li><a href={getLocalizedPath('/', lang)} class="hover:text-neutral-950 dark:hover:text-white transition-colors">180° Online Protractor</a></li>
+          <li><a href={getLocalizedPath('/360-protractor', lang)} class="hover:text-neutral-950 dark:hover:text-white transition-colors">360° Full Circle Protractor</a></li>
+          <li><a href={getLocalizedPath('/measure-angle-image', lang)} class="hover:text-neutral-950 dark:hover:text-white transition-colors">Image Angle Finder</a></li>
+          <li><a href={getLocalizedPath('/three-point-angle', lang)} class="hover:text-neutral-950 dark:hover:text-white transition-colors">3-Point Coordinate Angle</a></li>
+          <li><a href={getLocalizedPath('/inclinometer', lang)} class="hover:text-neutral-950 dark:hover:text-white transition-colors">Digital Inclinometer (Tilt)</a></li>
         </ul>
       </div>
 
@@ -41,10 +49,10 @@ const currentYear = new Date().getFullYear();
       <div class="space-y-3">
         <h4 class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-900 dark:text-white">Company & Legal</h4>
         <ul class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
-          <li><a href="/about" class="hover:text-neutral-950 dark:hover:text-white transition-colors">About Us</a></li>
-          <li><a href="/contact" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Contact Support</a></li>
-          <li><a href="/privacy-policy" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Privacy Policy</a></li>
-          <li><a href="/terms" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Terms of Service</a></li>
+          <li><a href={getLocalizedPath('/about', lang)} class="hover:text-neutral-950 dark:hover:text-white transition-colors">About Us</a></li>
+          <li><a href={getLocalizedPath('/contact', lang)} class="hover:text-neutral-950 dark:hover:text-white transition-colors">Contact Support</a></li>
+          <li><a href={getLocalizedPath('/privacy-policy', lang)} class="hover:text-neutral-950 dark:hover:text-white transition-colors">Privacy Policy</a></li>
+          <li><a href={getLocalizedPath('/terms', lang)} class="hover:text-neutral-950 dark:hover:text-white transition-colors">Terms of Service</a></li>
         </ul>
       </div>
     </div>
