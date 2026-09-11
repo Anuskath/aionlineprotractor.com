@@ -27,12 +27,12 @@ const {
     </div>
 
     <!-- Quick Mode Badges -->
-    <div class="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-900 p-1.5 rounded-xl border border-neutral-200 dark:border-neutral-800 self-start md:self-auto">
+    <div class="grid grid-cols-2 sm:flex items-center gap-1.5 bg-neutral-100 dark:bg-neutral-900 p-1.5 rounded-xl border border-neutral-200 dark:border-neutral-800 w-full md:w-auto">
       <button
         id="mode-180-btn"
-        class={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+        class={`px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-center ${
           initialMode === '180'
-            ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm'
+            ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-xs'
             : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
         }`}
       >
@@ -40,9 +40,9 @@ const {
       </button>
       <button
         id="mode-360-btn"
-        class={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+        class={`px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-center ${
           initialMode === '360'
-            ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm'
+            ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-xs'
             : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
         }`}
       >
@@ -56,14 +56,15 @@ const {
     <!-- Left / Center: Interactive Canvas Container (col-span-8) -->
     <div class="lg:col-span-8 flex flex-col gap-3">
       <!-- Toolbar Header above canvas -->
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-neutral-900 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
-        <div class="flex flex-wrap items-center gap-2">
+      <div class="flex flex-wrap items-center justify-between gap-2.5 bg-white dark:bg-neutral-900 p-2.5 sm:p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {allowImageUpload && (
-            <label class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors shadow-2xs">
-              <svg class="w-4 h-4 text-neutral-600 dark:text-neutral-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <label class="cursor-pointer inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors shadow-2xs">
+              <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-neutral-600 dark:text-neutral-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              <span>Upload Image / PDF</span>
+              <span class="hidden sm:inline">Upload Image / PDF</span>
+              <span class="sm:hidden">Upload</span>
               <input id="image-loader" type="file" accept="image/*,application/pdf" class="hidden" />
             </label>
           )}
@@ -72,14 +73,15 @@ const {
             <button
               id="open-camera-btn"
               type="button"
-              class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors shadow-2xs"
+              class="cursor-pointer inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors shadow-2xs"
               title="Take a live photo with camera to measure an angle"
             >
-              <svg class="w-4 h-4 text-neutral-600 dark:text-neutral-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-neutral-600 dark:text-neutral-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0118.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span>Take Photo</span>
+              <span class="hidden sm:inline">Take Photo</span>
+              <span class="sm:hidden">Camera</span>
             </button>
           )}
           <input id="camera-file-fallback" type="file" accept="image/*" capture="environment" class="hidden" />
@@ -88,43 +90,44 @@ const {
           <button
             id="auto-detect-btn"
             type="button"
-            class="hidden inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition-all active:scale-95 cursor-pointer"
+            class="hidden inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition-all active:scale-95 cursor-pointer"
             title="Scan diagram with AI and snap protractor onto detected angle"
           >
-            <svg id="auto-detect-spinner" class="w-4 h-4 animate-spin hidden text-white" fill="none" viewBox="0 0 24 24">
+            <svg id="auto-detect-spinner" class="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin hidden text-white" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
             </svg>
             <span id="auto-detect-icon">✨</span>
-            <span id="auto-detect-text">AI Auto-Detect Angle</span>
+            <span id="auto-detect-text" class="hidden sm:inline">AI Auto-Detect Angle</span>
+            <span class="sm:hidden font-bold">AI Scan</span>
           </button>
 
           <!-- PDF Multi-Page Navigation Bar -->
-          <div id="pdf-controls" class="hidden items-center gap-1.5 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1.5 rounded-lg text-xs font-mono border border-neutral-200 dark:border-neutral-700">
-            <button id="pdf-prev-btn" type="button" class="w-6 h-6 rounded flex items-center justify-center hover:bg-neutral-200 dark:hover:bg-neutral-700 font-bold" title="Previous page">◀</button>
-            <span id="pdf-page-indicator" class="text-neutral-700 dark:text-neutral-300 font-semibold px-1">Page 1 / 1</span>
-            <button id="pdf-next-btn" type="button" class="w-6 h-6 rounded flex items-center justify-center hover:bg-neutral-200 dark:hover:bg-neutral-700 font-bold" title="Next page">▶</button>
+          <div id="pdf-controls" class="hidden items-center gap-1.5 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-mono border border-neutral-200 dark:border-neutral-700">
+            <button id="pdf-prev-btn" type="button" class="w-5 h-5 sm:w-6 sm:h-6 rounded flex items-center justify-center hover:bg-neutral-200 dark:hover:bg-neutral-700 font-bold" title="Previous page">◀</button>
+            <span id="pdf-page-indicator" class="text-neutral-700 dark:text-neutral-300 font-semibold px-0.5 sm:px-1 text-[11px] sm:text-xs">Page 1 / 1</span>
+            <button id="pdf-next-btn" type="button" class="w-5 h-5 sm:w-6 sm:h-6 rounded flex items-center justify-center hover:bg-neutral-200 dark:hover:bg-neutral-700 font-bold" title="Next page">▶</button>
           </div>
 
           <button
             id="clear-img-btn"
-            class="hidden text-sm font-medium text-rose-500 hover:text-rose-600 px-2.5 py-1.5 transition-colors"
+            class="hidden text-xs sm:text-sm font-medium text-rose-500 hover:text-rose-600 px-2 py-1 transition-colors"
           >
             Remove
           </button>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3 ml-auto sm:ml-0">
           <!-- Snap Toggle -->
-          <label class="flex items-center gap-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer select-none">
-            <input id="snap-checkbox" type="checkbox" checked class="w-4 h-4 rounded text-neutral-900 dark:text-white focus:ring-0" />
+          <label class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer select-none">
+            <input id="snap-checkbox" type="checkbox" checked class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded text-neutral-900 dark:text-white focus:ring-0" />
             <span>Snap 1°</span>
           </label>
 
           <!-- Reset Button -->
           <button
             id="reset-protractor-btn"
-            class="px-3 py-1.5 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+            class="px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
           >
             Reset
           </button>
@@ -292,9 +295,9 @@ const {
     id="camera-modal"
     class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-xs transition-all select-none"
   >
-    <div class="relative w-full max-w-2xl bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden flex flex-col">
+    <div class="relative w-full max-w-2xl bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
       <!-- Modal Header -->
-      <div class="flex items-center justify-between px-5 py-3.5 border-b border-neutral-200 dark:border-neutral-800">
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
         <div class="flex items-center gap-2.5">
           <span class="text-xl">📸</span>
           <div>
@@ -313,7 +316,7 @@ const {
       </div>
 
       <!-- Live Video Viewport -->
-      <div class="relative w-full bg-black aspect-4/3 sm:aspect-16/10 flex items-center justify-center overflow-hidden">
+      <div class="relative w-full bg-black aspect-4/3 sm:aspect-16/10 max-h-[50vh] flex items-center justify-center overflow-hidden">
         <video
           id="camera-video"
           autoplay
