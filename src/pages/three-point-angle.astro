@@ -1,0 +1,245 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: '3-Point Angle Calculator',
+  url: 'https://aionlineprotractor.com/three-point-angle',
+  description: 'Click three points (A, B, C) anywhere on screen or image to calculate the exact angle ABC with vector trigonometry.',
+  applicationCategory: 'UtilitiesApplication',
+};
+---
+
+<Layout
+  title="3-Point Angle Calculator - Find Angle Between Three Points"
+  description="Click 3 points on screen or upload an image to measure the angle ABC at vertex B. Calculates degrees, radians, and vector coordinates."
+  canonical="https://aionlineprotractor.com/three-point-angle"
+  jsonLd={jsonLd}
+  currentPath="/three-point-angle"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div class="border-b border-neutral-200 dark:border-neutral-800 pb-5">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
+        Three-Point Angle Calculator
+      </h1>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-1 max-w-2xl">
+        Click or tap 3 points anywhere on the canvas: <strong>Point A</strong> (first ray), <strong>Point B (Vertex)</strong>, and <strong>Point C</strong> (second ray) to find ∠ABC.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Interactive Canvas (col-span-8) -->
+      <div class="lg:col-span-8 flex flex-col gap-3">
+        <div class="flex items-center justify-between bg-white dark:bg-neutral-900 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800">
+          <div class="flex items-center gap-2">
+            <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors">
+              <span>Upload Image</span>
+              <input id="tp-img-input" type="file" accept="image/*" class="hidden" />
+            </label>
+            <button id="tp-clear-btn" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800">
+              Clear Points
+            </button>
+          </div>
+          <span id="tp-step-status" class="text-xs font-mono font-medium text-blue-600 dark:text-blue-400">
+            Click to place Point A
+          </span>
+        </div>
+
+        <div
+          id="tp-canvas-wrap"
+          class="relative w-full h-[500px] rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 overflow-hidden select-none cursor-crosshair flex items-center justify-center"
+        >
+          <img id="tp-bg-img" class="absolute inset-0 w-full h-full object-contain pointer-events-none hidden opacity-80" alt="Reference background" />
+          <svg id="tp-svg" class="absolute inset-0 w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="none">
+            <g id="tp-shapes"></g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Result Card (col-span-4) -->
+      <div class="lg:col-span-4 flex flex-col gap-4">
+        <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 shadow-xs flex flex-col gap-5">
+          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500">
+            Computed Angle ∠ABC
+          </span>
+
+          <div class="flex items-baseline gap-2">
+            <span id="tp-angle-val" class="text-5xl font-black tracking-tight font-mono text-neutral-950 dark:text-white">
+              0.0
+            </span>
+            <span class="text-3xl font-light text-neutral-400">°</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 pt-3 border-t border-neutral-100 dark:border-neutral-800 text-xs font-mono">
+            <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl">
+              <span class="text-neutral-500 block mb-1">Radians</span>
+              <span id="tp-rad-val" class="font-bold text-neutral-900 dark:text-white">0.000 rad</span>
+            </div>
+            <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl">
+              <span class="text-neutral-500 block mb-1">Length |BA|</span>
+              <span id="tp-len-ba" class="font-bold text-neutral-900 dark:text-white">0 px</span>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-3 border-t border-neutral-100 dark:border-neutral-800 text-xs">
+            <h4 class="font-mono uppercase font-semibold text-neutral-500">Point Coordinates</h4>
+            <div class="flex justify-between py-1">
+              <span class="text-neutral-600 dark:text-neutral-400">Point A (Ray 1):</span>
+              <span id="tp-coord-a" class="font-mono font-semibold">Not set</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-neutral-600 dark:text-neutral-400">Point B (Vertex):</span>
+              <span id="tp-coord-b" class="font-mono font-semibold text-blue-600 dark:text-blue-400">Not set</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-neutral-600 dark:text-neutral-400">Point C (Ray 2):</span>
+              <span id="tp-coord-c" class="font-mono font-semibold">Not set</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  (function() {
+    let points = [];
+    const svg = document.getElementById('tp-svg');
+    const shapes = document.getElementById('tp-shapes');
+    const angleVal = document.getElementById('tp-angle-val');
+    const radVal = document.getElementById('tp-rad-val');
+    const lenBa = document.getElementById('tp-len-ba');
+    const coordA = document.getElementById('tp-coord-a');
+    const coordB = document.getElementById('tp-coord-b');
+    const coordC = document.getElementById('tp-coord-c');
+    const statusText = document.getElementById('tp-step-status');
+    const clearBtn = document.getElementById('tp-clear-btn');
+    const imgInput = document.getElementById('tp-img-input');
+    const bgImg = document.getElementById('tp-bg-img');
+
+    imgInput?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (file && bgImg) {
+        const r = new FileReader();
+        r.onload = (ev) => {
+          bgImg.src = ev.target?.result;
+          bgImg.classList.remove('hidden');
+        };
+        r.readAsDataURL(file);
+      }
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      points = [];
+      render();
+    });
+
+    svg?.addEventListener('click', (e) => {
+      if (points.length >= 3) {
+        points = [];
+      }
+      const rect = svg.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 1000;
+      const y = ((e.clientY - rect.top) / rect.height) * 600;
+      points.push({ x: Math.round(x), y: Math.round(y) });
+      render();
+    });
+
+    function render() {
+      if (!shapes) return;
+      shapes.innerHTML = '';
+
+      const labels = ['A', 'B (Vertex)', 'C'];
+      const colors = ['#10b981', '#3b82f6', '#f59e0b'];
+
+      // Update status
+      if (statusText) {
+        if (points.length === 0) statusText.textContent = 'Click to place Point A';
+        else if (points.length === 1) statusText.textContent = 'Click to place Point B (Vertex)';
+        else if (points.length === 2) statusText.textContent = 'Click to place Point C';
+        else statusText.textContent = 'Angle calculated! Click anywhere to restart.';
+      }
+
+      // Draw Lines if we have B
+      if (points.length >= 2) {
+        // Line B-A
+        const l1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        l1.setAttribute('x1', points[1].x);
+        l1.setAttribute('y1', points[1].y);
+        l1.setAttribute('x2', points[0].x);
+        l1.setAttribute('y2', points[0].y);
+        l1.setAttribute('stroke', '#10b981');
+        l1.setAttribute('stroke-width', '3');
+        shapes.appendChild(l1);
+      }
+
+      if (points.length === 3) {
+        // Line B-C
+        const l2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        l2.setAttribute('x1', points[1].x);
+        l2.setAttribute('y1', points[1].y);
+        l2.setAttribute('x2', points[2].x);
+        l2.setAttribute('y2', points[2].y);
+        l2.setAttribute('stroke', '#f59e0b');
+        l2.setAttribute('stroke-width', '3');
+        shapes.appendChild(l2);
+
+        // Compute Angle ABC at Vertex B
+        const b = points[1];
+        const a = points[0];
+        const c = points[2];
+
+        const vBA = { x: a.x - b.x, y: a.y - b.y };
+        const vBC = { x: c.x - b.x, y: c.y - b.y };
+
+        const dot = vBA.x * vBC.x + vBA.y * vBC.y;
+        const magBA = Math.sqrt(vBA.x * vBA.x + vBA.y * vBA.y);
+        const magBC = Math.sqrt(vBC.x * vBC.x + vBC.y * vBC.y);
+
+        let cosTheta = dot / (magBA * magBC);
+        cosTheta = Math.max(-1, Math.min(1, cosTheta));
+        const rad = Math.acos(cosTheta);
+        const deg = (rad * 180) / Math.PI;
+
+        if (angleVal) angleVal.textContent = deg.toFixed(1);
+        if (radVal) radVal.textContent = `${rad.toFixed(3)} rad`;
+        if (lenBa) lenBa.textContent = `${Math.round(magBA)} px`;
+      } else {
+        if (angleVal) angleVal.textContent = '0.0';
+        if (radVal) radVal.textContent = '0.000 rad';
+        if (lenBa) lenBa.textContent = '0 px';
+      }
+
+      // Draw Points
+      points.forEach((p, idx) => {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', p.x);
+        circle.setAttribute('cy', p.y);
+        circle.setAttribute('r', '9');
+        circle.setAttribute('fill', colors[idx]);
+        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('stroke-width', '2');
+        shapes.appendChild(circle);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', p.x + 14);
+        text.setAttribute('y', p.y + 5);
+        text.setAttribute('font-size', '14');
+        text.setAttribute('font-family', 'monospace');
+        text.setAttribute('font-weight', 'bold');
+        text.setAttribute('fill', colors[idx]);
+        text.textContent = labels[idx];
+        shapes.appendChild(text);
+      });
+
+      // Update coords
+      if (coordA) coordA.textContent = points[0] ? `(${points[0].x}, ${points[0].y})` : 'Not set';
+      if (coordB) coordB.textContent = points[1] ? `(${points[1].x}, ${points[1].y})` : 'Not set';
+      if (coordC) coordC.textContent = points[2] ? `(${points[2].x}, ${points[2].y})` : 'Not set';
+    }
+
+    render();
+  })();
+</script>

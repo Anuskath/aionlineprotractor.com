@@ -1,11 +1,83 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import ProtractorApp from '../components/ProtractorApp.astro';
+import AngleKnowledge from '../components/AngleKnowledge.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'AI Online Protractor',
+    url: 'https://aionlineprotractor.com/',
+    description: 'Free online protractor tool to measure angles in degrees and radians on screen or from uploaded images.',
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any Web Browser',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    featureList: [
+      'Interactive 180-degree and 360-degree protractor',
+      'Dual degree ticks with sub-pixel ray dragging',
+      'Image upload blueprint angle measurement',
+      'Instant radians, gradians, and slope calculation',
+      'Mobile touch responsive design with dark mode',
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How do I use this online protractor to measure an angle on my screen?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Simply drag the black center vertex to align with the vertex of the angle you wish to measure. Then drag the green ray along the baseline, and drag the blue ray along the second arm. The exact angle readout in degrees and radians is displayed in real-time.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Can I upload an image or blueprint to measure angles directly on it?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes! Click the Upload Image button in the toolbar to upload any JPG, PNG, WebP, or SVG file. Your image will appear directly beneath the interactive protractor with adjustable opacity.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is the difference between a 180° and 360° protractor?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'A standard 180-degree protractor is a semi-circle tool for acute, right, and obtuse angles. A 360-degree protractor is a full circular instrument that allows seamless measurement of reflex angles and compass bearings.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is this online protractor accurate on mobile phones and tablets?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes, our online protractor is built with responsive SVG vector geometry and full multi-touch pointer support. It scales accurately to any device display.',
+        },
+      },
+    ],
+  },
+];
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="AI Online Protractor - Free Screen Protractor & Angle Finder"
+  description="Measure angles online with high precision. Interactive 180° & 360° screen protractor with image upload measuring, angle classifications, radians, and slope conversions."
+  canonical="https://aionlineprotractor.com"
+  jsonLd={jsonLd}
+  currentPath="/"
+>
+  <ProtractorApp
+    initialMode="180"
+    pageTitle="AI Online Protractor"
+    pageSubtitle="Measure angles directly on your screen or upload drawings, blueprints, and homework photos."
+    allowImageUpload={true}
+  />
+  <AngleKnowledge />
 </Layout>

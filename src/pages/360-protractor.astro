@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProtractorApp from '../components/ProtractorApp.astro';
+import AngleKnowledge from '../components/AngleKnowledge.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: '360° Online Protractor Tool',
+  url: 'https://aionlineprotractor.com/360-protractor',
+  description: 'Full circle 360-degree online protractor for measuring reflex angles, bearings, and circular geometry on screen.',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any Web Browser',
+};
+---
+
+<Layout
+  title="360° Online Protractor - Full Circle Digital Angle Measurement"
+  description="Free 360-degree full circle online protractor. Measure reflex angles, compass bearings, and complete circle geometry with sub-pixel ray dragging."
+  canonical="https://aionlineprotractor.com/360-protractor"
+  jsonLd={jsonLd}
+  currentPath="/360-protractor"
+>
+  <ProtractorApp
+    initialMode="360"
+    pageTitle="360° Full Circle Online Protractor"
+    pageSubtitle="Measure reflex angles (180° - 360°), circular bearings, and full-rotation radial angles directly in your browser."
+    allowImageUpload={true}
+  />
+  <AngleKnowledge />
+</Layout>

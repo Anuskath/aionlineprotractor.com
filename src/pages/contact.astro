@@ -1,0 +1,104 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Contact Support - AI Online Protractor"
+  description="Contact the team behind AI Online Protractor. Submit feature suggestions, bug reports, or questions."
+  canonical="https://aionlineprotractor.com/contact"
+  currentPath="/contact"
+>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+    <div class="border-b border-neutral-200 dark:border-neutral-800 pb-6 text-center space-y-2">
+      <h1 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">Contact & Feedback</h1>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400">
+        Have a feature request, bug report, or calibration question? We'd love to hear from you.
+      </p>
+    </div>
+
+    <!-- Contact Info Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 space-y-2">
+        <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">
+          ✉️
+        </div>
+        <h3 class="font-bold text-base text-neutral-900 dark:text-white">Direct Email</h3>
+        <p class="text-xs text-neutral-500 font-mono">hello@aionlineprotractor.com</p>
+        <p class="text-xs text-neutral-600 dark:text-neutral-400 pt-2">
+          Responses typically sent within 24–48 hours.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 space-y-2">
+        <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm">
+          💡
+        </div>
+        <h3 class="font-bold text-base text-neutral-900 dark:text-white">Feature Requests</h3>
+        <p class="text-xs text-neutral-600 dark:text-neutral-400">
+          Want a specific custom angle preset, CAD overlay feature, or unit conversion? Let us know!
+        </p>
+      </div>
+    </div>
+
+    <!-- Contact Form with mailto trigger -->
+    <div class="p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xs space-y-4">
+      <h3 class="font-bold text-lg text-neutral-900 dark:text-white">Send Us a Message</h3>
+      
+      <form id="contact-form" class="space-y-4 text-xs">
+        <div>
+          <label for="name" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1">Your Name</label>
+          <input
+            id="name"
+            type="text"
+            required
+            placeholder="John Doe"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
+          />
+        </div>
+
+        <div>
+          <label for="email" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1">Your Email</label>
+          <input
+            id="email"
+            type="email"
+            required
+            placeholder="john@example.com"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
+          />
+        </div>
+
+        <div>
+          <label for="message" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1">Message</label>
+          <textarea
+            id="message"
+            rows="4"
+            required
+            placeholder="Describe your feedback, feature request, or question..."
+            class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 px-4 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 font-semibold text-xs hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
+        >
+          Submit Message
+        </button>
+      </form>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name')?.value || '';
+    const email = document.getElementById('email')?.value || '';
+    const msg = document.getElementById('message')?.value || '';
+
+    const subject = encodeURIComponent(`Inquiry from ${name} (AI Online Protractor)`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+
+    window.location.href = `mailto:hello@aionlineprotractor.com?subject=${subject}&body=${body}`;
+  });
+</script>

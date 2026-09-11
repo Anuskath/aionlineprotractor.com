@@ -1,0 +1,176 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Digital Online Inclinometer & Spirit Level',
+  url: 'https://aionlineprotractor.com/inclinometer',
+  description: 'Measure slope, incline, and tilt angles using your mobile device accelerometer or on-screen interactive bubble level.',
+  applicationCategory: 'UtilitiesApplication',
+};
+---
+
+<Layout
+  title="Online Inclinometer & Bubble Level - Digital Tilt Angle Finder"
+  description="Free digital inclinometer and spirit level. Measure physical slope and surface angles using your smartphone accelerometer or desktop angle simulator."
+  canonical="https://aionlineprotractor.com/inclinometer"
+  jsonLd={jsonLd}
+  currentPath="/inclinometer"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div class="text-center space-y-2">
+      <span class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500">
+        Hardware Sensor & Spirit Level
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white">
+        Digital Inclinometer & Tilt Meter
+      </h1>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
+        Lay your phone flat or against a surface to measure tilt angles, pitch, and slope degrees in real time.
+      </p>
+    </div>
+
+    <!-- Main Inclinometer Dial Card -->
+    <div class="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 p-8 shadow-xs flex flex-col items-center justify-center gap-6">
+      <!-- Digital Angle Readout -->
+      <div class="text-center">
+        <div class="flex items-baseline justify-center gap-1">
+          <span id="tilt-deg" class="text-6xl sm:text-7xl font-mono font-black text-neutral-950 dark:text-white">
+            0.0
+          </span>
+          <span class="text-4xl font-light text-neutral-400">°</span>
+        </div>
+        <span id="level-status" class="inline-block mt-2 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900">
+          Perfect Level (0°)
+        </span>
+      </div>
+
+      <!-- Simulated Bubble Level Cylinder -->
+      <div class="w-full max-w-md h-12 rounded-full border-2 border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-950 relative overflow-hidden flex items-center justify-center">
+        <!-- Center reference tick lines -->
+        <div class="absolute w-12 h-full border-x-2 border-emerald-500 bg-emerald-500/10 pointer-events-none"></div>
+
+        <!-- The moving spirit bubble -->
+        <div
+          id="spirit-bubble"
+          class="w-10 h-8 rounded-full bg-emerald-500 shadow-md transition-transform duration-75 ease-out"
+          style="transform: translateX(0px);"
+        ></div>
+      </div>
+
+      <!-- Pitch / Roll Metrics -->
+      <div class="w-full grid grid-cols-2 gap-4 max-w-md text-center font-mono text-xs">
+        <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-2xl border border-neutral-100 dark:border-neutral-800">
+          <span class="text-neutral-500 block mb-1">Pitch (Front/Back)</span>
+          <span id="pitch-val" class="text-sm font-bold text-neutral-900 dark:text-white">0.0°</span>
+        </div>
+        <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-2xl border border-neutral-100 dark:border-neutral-800">
+          <span class="text-neutral-500 block mb-1">Roll (Side Tilt)</span>
+          <span id="roll-val" class="text-sm font-bold text-neutral-900 dark:text-white">0.0°</span>
+        </div>
+      </div>
+
+      <!-- Sensor Permission Button for iOS / Android -->
+      <button
+        id="sensor-perm-btn"
+        class="px-5 py-2.5 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 text-xs font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
+      >
+        Enable Device Motion Sensors
+      </button>
+      <p id="sensor-note" class="text-[11px] text-neutral-400 text-center max-w-sm">
+        On mobile, click to activate the internal gyroscope/accelerometer. On desktop, drag the slider below to test angles.
+      </p>
+
+      <!-- Desktop manual slider fallback -->
+      <div class="w-full max-w-md space-y-1 pt-4 border-t border-neutral-100 dark:border-neutral-800">
+        <div class="flex justify-between text-xs text-neutral-500">
+          <span>Manual Angle Simulator</span>
+          <span id="slider-val" class="font-mono">0°</span>
+        </div>
+        <input id="manual-slider" type="range" min="-90" max="90" value="0" class="w-full h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg cursor-pointer" />
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  (function() {
+    const tiltDeg = document.getElementById('tilt-deg');
+    const levelStatus = document.getElementById('level-status');
+    const spiritBubble = document.getElementById('spirit-bubble');
+    const pitchVal = document.getElementById('pitch-val');
+    const rollVal = document.getElementById('roll-val');
+    const sensorBtn = document.getElementById('sensor-perm-btn');
+    const sensorNote = document.getElementById('sensor-note');
+    const manualSlider = document.getElementById('manual-slider');
+    const sliderVal = document.getElementById('slider-val');
+
+    function updateAngle(angle) {
+      const rounded = Math.abs(angle).toFixed(1);
+      if (tiltDeg) tiltDeg.textContent = rounded;
+
+      // Update spirit bubble position (-150px to +150px range)
+      const clampedAngle = Math.max(-45, Math.min(45, angle));
+      const translateX = (clampedAngle / 45) * 120;
+      if (spiritBubble) {
+        spiritBubble.style.transform = `translateX(${translateX}px)`;
+      }
+
+      // Status
+      if (levelStatus) {
+        if (Math.abs(angle) < 0.8) {
+          levelStatus.textContent = 'Perfect Level (0°)';
+          levelStatus.className = 'inline-block mt-2 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900';
+        } else {
+          levelStatus.textContent = `Tilted ${Math.abs(angle).toFixed(1)}°`;
+          levelStatus.className = 'inline-block mt-2 px-3 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-900';
+        }
+      }
+    }
+
+    // Manual slider fallback
+    manualSlider?.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      if (sliderVal) sliderVal.textContent = `${val}°`;
+      if (rollVal) rollVal.textContent = `${val.toFixed(1)}°`;
+      updateAngle(val);
+    });
+
+    // Device orientation handler
+    function handleOrientation(e) {
+      const gamma = e.gamma || 0; // Roll: Left to right
+      const beta = e.beta || 0;   // Pitch: Front to back
+
+      if (rollVal) rollVal.textContent = `${gamma.toFixed(1)}°`;
+      if (pitchVal) pitchVal.textContent = `${beta.toFixed(1)}°`;
+
+      // Use roll as primary level angle
+      updateAngle(gamma);
+    }
+
+    sensorBtn?.addEventListener('click', async () => {
+      // iOS 13+ requires explicit permission
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        try {
+          const response = await DeviceOrientationEvent.requestPermission();
+          if (response === 'granted') {
+            window.addEventListener('deviceorientation', handleOrientation);
+            if (sensorBtn) sensorBtn.textContent = 'Sensor Active';
+            if (sensorNote) sensorNote.textContent = 'Motion sensor active. Move your phone to measure tilt.';
+          } else {
+            alert('Sensor permission was denied.');
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      } else if ('DeviceOrientationEvent' in window) {
+        window.addEventListener('deviceorientation', handleOrientation);
+        if (sensorBtn) sensorBtn.textContent = 'Sensor Active';
+        if (sensorNote) sensorNote.textContent = 'Motion sensor active. Move your phone to measure tilt.';
+      } else {
+        alert('Device orientation sensors are not supported on this browser.');
+      }
+    });
+  })();
+</script>

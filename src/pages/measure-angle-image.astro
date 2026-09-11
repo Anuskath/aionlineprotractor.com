@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProtractorApp from '../components/ProtractorApp.astro';
+import AngleKnowledge from '../components/AngleKnowledge.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Image Angle Finder & Blueprint Protractor',
+  url: 'https://aionlineprotractor.com/measure-angle-image',
+  description: 'Upload any image, CAD drawing, blueprint, or photo and measure angles with an on-screen transparent protractor.',
+  applicationCategory: 'UtilitiesApplication',
+};
+---
+
+<Layout
+  title="Measure Angle on Image Online - Digital Image Protractor"
+  description="Upload any photo, blueprint, or diagram to measure angles accurately. Adjust protractor transparency and drag vertex handles directly on your image."
+  canonical="https://aionlineprotractor.com/measure-angle-image"
+  jsonLd={jsonLd}
+  currentPath="/measure-angle-image"
+>
+  <ProtractorApp
+    initialMode="180"
+    pageTitle="Image Angle Finder & Blueprint Protractor"
+    pageSubtitle="Upload your blueprint, CAD drawing, or photo. Adjust the transparency slider to measure slope and joint angles directly on the picture."
+    allowImageUpload={true}
+  />
+  <AngleKnowledge />
+</Layout>

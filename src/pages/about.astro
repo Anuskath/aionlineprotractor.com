@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="About Us - AI Online Protractor"
+  description="Learn about the mission, precision geometry engine, and team behind AI Online Protractor (aionlineprotractor.com)."
+  canonical="https://aionlineprotractor.com/about"
+  currentPath="/about"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+    <div class="border-b border-neutral-200 dark:border-neutral-800 pb-6">
+      <span class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500">
+        Our Mission & Technology
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white mt-1">
+        About AI Online Protractor
+      </h1>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-2">
+        Building high-precision, zero-friction mathematical instruments accessible to anyone with a browser.
+      </p>
+    </div>
+
+    <div class="space-y-8 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-neutral-900 dark:text-white">Why We Built This</h2>
+        <p>
+          Traditional plastic protractors are prone to parallax errors, easily misplaced, and impossible to overlay on digital documents, photos, or CAD drawings. Most existing online protractors were built over a decade ago—plagued with clunky slider controls, disruptive video ads, missing dark mode, and broken mobile touch support.
+        </p>
+        <p>
+          <strong>AI Online Protractor</strong> was created to solve these exact frustrations. We set out to build a lightweight, beautiful, and distraction-free angle measuring tool that feels like a native desktop CAD application while loading instantly in any web browser.
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-neutral-900 dark:text-white">Core Technology & Precision</h2>
+        <p>
+          Our application is built on cutting-edge web standards:
+        </p>
+        <ul class="list-disc list-inside space-y-2 pl-2">
+          <li><strong>Sub-Pixel SVG Vector Math:</strong> High-resolution vector geometry ensures degree tick marks remain sharp on high-DPI 4K and Retina displays.</li>
+          <li><strong>Unified Pointer Events:</strong> Smooth, low-latency ray dragging with identical precision across Apple Pencil, stylus, touch, trackpads, and mouse pointers.</li>
+          <li><strong>100% Client-Side Privacy:</strong> Image processing takes place directly in your device's memory. No uploaded blueprints or diagrams are sent over the network.</li>
+          <li><strong>Zero JS Overhead:</strong> Built with Astro static architecture for near-zero First Contentful Paint (FCP) and maximum Core Web Vitals speed.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-neutral-900 dark:text-white">Open Web Standards</h2>
+        <p>
+          We believe high-quality educational and engineering tools should be free and accessible to all students, carpenters, engineers, and teachers without requiring paywalls or mandatory accounts.
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>
