@@ -1,2 +1,11 @@
+https://aionlineprotractor.pages.dev/*
+  X-Robots-Tag: noindex
+
 https://*.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://aionlineprotractor.rajanuska2004.workers.dev/*
+  X-Robots-Tag: noindex
+
+https://*.workers.dev/*
   X-Robots-Tag: noindex
