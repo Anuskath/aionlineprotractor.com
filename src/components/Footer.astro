@@ -1,0 +1,58 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black transition-colors py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+      <!-- Col 1: Brand Info -->
+      <div class="md:col-span-2 space-y-4">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded bg-neutral-950 dark:bg-white text-white dark:text-neutral-950 flex items-center justify-center font-bold text-xs">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 12a10 10 0 0 1 20 0Z" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+            </svg>
+          </div>
+          <span class="font-semibold text-lg text-neutral-900 dark:text-white">AI Online Protractor</span>
+        </div>
+        <p class="text-sm text-neutral-600 dark:text-neutral-400 max-w-md leading-relaxed">
+          High-precision digital angle measurement tool designed for students, engineers, architects, and designers. Measure angles on screen, from uploaded images, or via mobile tilt sensors with zero installation.
+        </p>
+        <div class="flex items-center gap-2 text-xs text-neutral-500 font-mono">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+          100% Client-Side • Edge Powered by Cloudflare • Free Forever
+        </div>
+      </div>
+
+      <!-- Col 2: Measurement Tools -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-900 dark:text-white">Angle Tools</h4>
+        <ul class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+          <li><a href="/" class="hover:text-neutral-950 dark:hover:text-white transition-colors">180° Online Protractor</a></li>
+          <li><a href="/360-protractor" class="hover:text-neutral-950 dark:hover:text-white transition-colors">360° Full Circle Protractor</a></li>
+          <li><a href="/measure-angle-image" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Image Angle Finder</a></li>
+          <li><a href="/three-point-angle" class="hover:text-neutral-950 dark:hover:text-white transition-colors">3-Point Coordinate Angle</a></li>
+          <li><a href="/inclinometer" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Digital Inclinometer (Tilt)</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Legal & AdSense Compliance -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-900 dark:text-white">Company & Legal</h4>
+        <ul class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+          <li><a href="/about" class="hover:text-neutral-950 dark:hover:text-white transition-colors">About Us</a></li>
+          <li><a href="/contact" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Contact Support</a></li>
+          <li><a href="/privacy-policy" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Privacy Policy</a></li>
+          <li><a href="/terms" class="hover:text-neutral-950 dark:hover:text-white transition-colors">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom copyright -->
+    <div class="border-t border-neutral-200 dark:border-neutral-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
+      <p>© {currentYear} AI Online Protractor (aionlineprotractor.com). All rights reserved.</p>
+      <p class="text-neutral-400">Precision angle geometry made simple.</p>
+    </div>
+  </div>
+</footer>

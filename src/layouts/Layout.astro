@@ -1,23 +1,76 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  jsonLd?: Record<string, any> | Record<string, any>[];
+  currentPath?: string;
+}
+
+const {
+  title = 'AI Online Protractor - Free Precision Digital Angle Measurement Tool',
+  description = 'Free online protractor tool to measure angles in degrees and radians. Features 180° & 360° protractors, image upload measuring, 3-point angle solver, and mobile tilt inclinometer.',
+  canonical = 'https://aionlineprotractor.com',
+  jsonLd,
+  currentPath = '/',
+} = Astro.props;
+
+const siteUrl = 'https://aionlineprotractor.com';
+const canonicalUrl = canonical.startsWith('http') ? canonical : `${siteUrl}${canonical}`;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="AI Online Protractor" />
+    <meta property="og:image" content={`${siteUrl}/og-image.svg`} />
+
+    <!-- Twitter Meta -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}/og-image.svg`} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <meta name="theme-color" content="#171717" />
+
+    <!-- Anti-FOUC inline script for theme -->
+    <script is:inline>
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
+    <!-- Structured Data JSON-LD -->
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(Array.isArray(jsonLd) ? jsonLd : [jsonLd])} />
+    )}
+  </head>
+  <body class="flex flex-col min-h-screen bg-[#fafafa] dark:bg-black text-[#171717] dark:text-[#ededed] antialiased selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-black">
+    <Header currentPath={currentPath} />
+    <main class="flex-1 w-full">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,715 @@
+---
+interface Props {
+  initialMode?: '180' | '360';
+  allowImageUpload?: boolean;
+  pageTitle?: string;
+  pageSubtitle?: string;
+}
+
+const {
+  initialMode = '180',
+  allowImageUpload = true,
+  pageTitle = 'Precision Online Protractor',
+  pageSubtitle = 'Drag the rays or vertex to measure any angle. Switch between 180° and 360° or upload an image to measure on drawings.',
+} = Astro.props;
+---
+
+<div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <!-- Top Bar: Title & Mode Switcher -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-5">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
+        {pageTitle}
+      </h1>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-1 max-w-2xl">
+        {pageSubtitle}
+      </p>
+    </div>
+
+    <!-- Quick Mode Badges -->
+    <div class="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-200 dark:border-neutral-800 self-start md:self-auto">
+      <button
+        id="mode-180-btn"
+        class={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
+          initialMode === '180'
+            ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm'
+            : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+        }`}
+      >
+        180° Semi-Circle
+      </button>
+      <button
+        id="mode-360-btn"
+        class={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
+          initialMode === '360'
+            ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm'
+            : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+        }`}
+      >
+        360° Full Circle
+      </button>
+    </div>
+  </div>
+
+  <!-- Workspace Grid: Canvas + Inspector Dashboard -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Left / Center: Interactive Canvas Container (col-span-8) -->
+    <div class="lg:col-span-8 flex flex-col gap-3">
+      <!-- Toolbar Header above canvas -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-neutral-900 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
+        <div class="flex items-center gap-2">
+          {allowImageUpload && (
+            <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>Upload Image</span>
+              <input id="image-loader" type="file" accept="image/*" class="hidden" />
+            </label>
+          )}
+
+          <button
+            id="clear-img-btn"
+            class="hidden text-xs text-rose-500 hover:text-rose-600 px-2 py-1 transition-colors"
+          >
+            Remove Image
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Snap Toggle -->
+          <label class="flex items-center gap-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer select-none">
+            <input id="snap-checkbox" type="checkbox" checked class="rounded text-neutral-900 dark:text-white focus:ring-0" />
+            <span>Snap 1°</span>
+          </label>
+
+          <!-- Reset Button -->
+          <button
+            id="reset-protractor-btn"
+            class="px-2.5 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Interactive Protractor Area -->
+      <div
+        id="canvas-wrapper"
+        class="relative w-full h-[450px] sm:h-[540px] md:h-[600px] rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 overflow-hidden shadow-sm select-none touch-none crosshair-cursor flex items-center justify-center"
+      >
+        <!-- Background Image layer -->
+        <img
+          id="uploaded-preview-img"
+          alt="Measurement background"
+          class="absolute inset-0 w-full h-full object-contain pointer-events-none hidden opacity-80"
+        />
+
+        <!-- Subtle Grid Background -->
+        <div class="absolute inset-0 bg-[radial-gradient(#d4d4d4_1px,transparent_1px)] dark:bg-[radial-gradient(#262626_1px,transparent_1px)] [background-size:20px_20px] opacity-60 pointer-events-none"></div>
+
+        <!-- SVG Interactive Protractor Container -->
+        <svg
+          id="protractor-svg"
+          class="absolute w-full h-full"
+          viewBox="0 0 1000 700"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <!-- Dynamic Protractor Content rendered by client JS -->
+          <g id="protractor-group"></g>
+        </svg>
+
+        <!-- Instructions Overlay Helper on Hover/Touch -->
+        <div class="absolute bottom-3 left-3 bg-neutral-900/80 dark:bg-black/80 backdrop-blur-xs text-white text-[11px] px-3 py-1.5 rounded-lg pointer-events-none flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          Drag Green handle for Ray 1 • Drag Blue handle for Ray 2 • Drag Center to move
+        </div>
+      </div>
+
+      <!-- Quick Preset Angle Buttons -->
+      <div class="flex flex-wrap items-center gap-1.5 p-3 rounded-xl bg-neutral-100/70 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 text-xs">
+        <span class="text-neutral-500 font-mono text-[11px] mr-1">Quick Angles:</span>
+        {['30°', '45°', '60°', '90°', '120°', '135°', '180°', '270°', '360°'].map((angle) => (
+          <button
+            data-preset={angle.replace('°', '')}
+            class="preset-angle-btn px-2.5 py-1 font-mono font-medium rounded-md bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
+          >
+            {angle}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Right: Readout Card & Geometry Breakdown (col-span-4) -->
+    <div class="lg:col-span-4 flex flex-col gap-4">
+      <!-- Main Live Metric Card -->
+      <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 shadow-xs flex flex-col gap-5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500">
+            Measured Angle (θ)
+          </span>
+          <span
+            id="angle-classification-badge"
+            class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-900"
+          >
+            Acute Angle
+          </span>
+        </div>
+
+        <!-- Big Hero Angle Readout -->
+        <div class="flex items-baseline gap-2">
+          <span id="readout-deg" class="text-5xl sm:text-6xl font-black tracking-tight text-neutral-950 dark:text-white font-mono">
+            45.0
+          </span>
+          <span class="text-3xl font-light text-neutral-400">°</span>
+        </div>
+
+        <!-- Secondary Angle Conversions -->
+        <div class="grid grid-cols-2 gap-3 pt-3 border-t border-neutral-100 dark:border-neutral-800 text-sm">
+          <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl border border-neutral-100 dark:border-neutral-800/80">
+            <span class="text-[11px] text-neutral-500 font-mono block mb-0.5">Radians</span>
+            <span id="readout-rad" class="font-mono font-semibold text-neutral-900 dark:text-white">0.785 rad</span>
+          </div>
+          <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl border border-neutral-100 dark:border-neutral-800/80">
+            <span class="text-[11px] text-neutral-500 font-mono block mb-0.5">Gradians</span>
+            <span id="readout-grad" class="font-mono font-semibold text-neutral-900 dark:text-white">50.0 grad</span>
+          </div>
+        </div>
+
+        <!-- Geometric Relations (Complementary, Supplementary, Reflex) -->
+        <div class="space-y-2 pt-3 border-t border-neutral-100 dark:border-neutral-800">
+          <h4 class="text-xs font-mono uppercase font-semibold text-neutral-500">Angle Relationships</h4>
+          
+          <div class="flex items-center justify-between text-xs py-1">
+            <span class="text-neutral-600 dark:text-neutral-400">Supplementary (180° - θ):</span>
+            <span id="readout-supp" class="font-mono font-semibold text-neutral-900 dark:text-neutral-100">135.0°</span>
+          </div>
+
+          <div class="flex items-center justify-between text-xs py-1">
+            <span class="text-neutral-600 dark:text-neutral-400">Complementary (90° - θ):</span>
+            <span id="readout-comp" class="font-mono font-semibold text-neutral-900 dark:text-neutral-100">45.0°</span>
+          </div>
+
+          <div class="flex items-center justify-between text-xs py-1">
+            <span class="text-neutral-600 dark:text-neutral-400">Reflex (360° - θ):</span>
+            <span id="readout-reflex" class="font-mono font-semibold text-neutral-900 dark:text-neutral-100">315.0°</span>
+          </div>
+
+          <div class="flex items-center justify-between text-xs py-1">
+            <span class="text-neutral-600 dark:text-neutral-400">Slope / Incline:</span>
+            <span id="readout-slope" class="font-mono font-semibold text-neutral-900 dark:text-neutral-100">100.0%</span>
+          </div>
+        </div>
+
+        <!-- Controls: Opacity & Scale -->
+        <div class="space-y-3 pt-3 border-t border-neutral-100 dark:border-neutral-800 text-xs">
+          <h4 class="font-mono uppercase font-semibold text-neutral-500">Fine Adjustments</h4>
+          
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-neutral-600 dark:text-neutral-400">Protractor Opacity</span>
+              <span id="opacity-label" class="font-mono">85%</span>
+            </div>
+            <input id="opacity-slider" type="range" min="20" max="100" value="85" class="w-full h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer" />
+          </div>
+
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-neutral-600 dark:text-neutral-400">Protractor Scale</span>
+              <span id="scale-label" class="font-mono">100%</span>
+            </div>
+            <input id="scale-slider" type="range" min="60" max="140" value="100" class="w-full h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy & Export Actions -->
+      <div class="flex gap-2">
+        <button
+          id="copy-angle-btn"
+          class="flex-1 py-2.5 px-3 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 text-xs font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs flex items-center justify-center gap-1.5"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          <span id="copy-btn-text">Copy Angle Result</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ initialMode }}>
+  // Client-Side Protractor Interactive Engine
+  (function () {
+    let mode = initialMode || '180'; // '180' or '360'
+    let snap1Deg = true;
+    let opacity = 0.85;
+    let radius = 260; // base protractor radius in SVG viewbox coordinates (1000 x 700)
+    let origin = { x: 500, y: 440 }; // center vertex point
+    let angle1 = 0; // base arm angle (Ray 1 in degrees)
+    let angle2 = 45; // target arm angle (Ray 2 in degrees)
+    let protractorRotation = 0; // whole protractor body rotation in degrees
+
+    let activeDrag = null; // 'center' | 'ray1' | 'ray2' | 'body' | null
+    let dragStart = { x: 0, y: 0 };
+    let initialOrigin = { ...origin };
+
+    const svg = document.getElementById('protractor-svg');
+    const group = document.getElementById('protractor-group');
+    const readoutDeg = document.getElementById('readout-deg');
+    const readoutRad = document.getElementById('readout-rad');
+    const readoutGrad = document.getElementById('readout-grad');
+    const readoutSupp = document.getElementById('readout-supp');
+    const readoutComp = document.getElementById('readout-comp');
+    const readoutReflex = document.getElementById('readout-reflex');
+    const readoutSlope = document.getElementById('readout-slope');
+    const classificationBadge = document.getElementById('angle-classification-badge');
+
+    const snapCheckbox = document.getElementById('snap-checkbox');
+    const mode180Btn = document.getElementById('mode-180-btn');
+    const mode360Btn = document.getElementById('mode-360-btn');
+    const resetBtn = document.getElementById('reset-protractor-btn');
+    const opacitySlider = document.getElementById('opacity-slider');
+    const opacityLabel = document.getElementById('opacity-label');
+    const scaleSlider = document.getElementById('scale-slider');
+    const scaleLabel = document.getElementById('scale-label');
+    const copyBtn = document.getElementById('copy-angle-btn');
+    const copyBtnText = document.getElementById('copy-btn-text');
+    const imageLoader = document.getElementById('image-loader');
+    const uploadedPreviewImg = document.getElementById('uploaded-preview-img');
+    const clearImgBtn = document.getElementById('clear-img-btn');
+
+    // Handle Image Loading
+    imageLoader?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (uploadedPreviewImg) {
+          uploadedPreviewImg.src = event.target?.result;
+          uploadedPreviewImg.classList.remove('hidden');
+          clearImgBtn?.classList.remove('hidden');
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    clearImgBtn?.addEventListener('click', () => {
+      if (uploadedPreviewImg) {
+        uploadedPreviewImg.src = '';
+        uploadedPreviewImg.classList.add('hidden');
+        clearImgBtn?.classList.add('hidden');
+      }
+      if (imageLoader) imageLoader.value = '';
+    });
+
+    // Helper: Normalize angle to 0..360
+    function normalizeAngle(a) {
+      let ang = a % 360;
+      if (ang < 0) ang += 360;
+      return ang;
+    }
+
+    // Convert degrees to SVG coordinate from center
+    function polarToCartesian(centerX, centerY, rad, angleInDegrees) {
+      const angleInRadians = (angleInDegrees * Math.PI) / 180.0;
+      return {
+        x: centerX + rad * Math.cos(angleInRadians),
+        y: centerY - rad * Math.sin(angleInRadians), // SVG y is inverted
+      };
+    }
+
+    // Calculate current measured angle between Ray 1 and Ray 2
+    function getMeasuredAngle() {
+      let diff = angle2 - angle1;
+      if (mode === '180') {
+        let a = Math.abs(diff) % 360;
+        if (a > 180) a = 360 - a;
+        return a;
+      } else {
+        let a = diff % 360;
+        if (a < 0) a += 360;
+        return a;
+      }
+    }
+
+    // Draw full SVG protractor
+    function renderProtractor() {
+      if (!group) return;
+      group.innerHTML = '';
+
+      const is360 = mode === '360';
+      const measuredAngle = getMeasuredAngle();
+      const currentRadius = radius;
+
+      // 1. Semi-transparent background disc / semicircle
+      let bgPath = '';
+      if (is360) {
+        bgPath = `M ${origin.x + currentRadius} ${origin.y} A ${currentRadius} ${currentRadius} 0 1 0 ${origin.x - currentRadius} ${origin.y} A ${currentRadius} ${currentRadius} 0 1 0 ${origin.x + currentRadius} ${origin.y} Z`;
+      } else {
+        bgPath = `M ${origin.x - currentRadius} ${origin.y} A ${currentRadius} ${currentRadius} 0 0 1 ${origin.x + currentRadius} ${origin.y} Z`;
+      }
+
+      const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      pathElem.setAttribute('d', bgPath);
+      pathElem.setAttribute('fill', 'currentColor');
+      pathElem.setAttribute('class', 'text-white/80 dark:text-neutral-900/80 backdrop-blur-md');
+      pathElem.setAttribute('stroke', '#737373');
+      pathElem.setAttribute('stroke-width', '1.5');
+      pathElem.setAttribute('opacity', opacity.toString());
+      group.appendChild(pathElem);
+
+      // 2. Degree ticks and labels
+      const maxDegree = is360 ? 360 : 180;
+      const step = 1;
+
+      for (let deg = 0; deg <= maxDegree; deg += step) {
+        const isTen = deg % 10 === 0;
+        const isFive = deg % 5 === 0;
+        const tickLength = isTen ? 18 : isFive ? 12 : 6;
+
+        // Outer ticks
+        const pOuter = polarToCartesian(origin.x, origin.y, currentRadius, deg);
+        const pInner = polarToCartesian(origin.x, origin.y, currentRadius - tickLength, deg);
+
+        const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        tick.setAttribute('x1', pOuter.x.toString());
+        tick.setAttribute('y1', pOuter.y.toString());
+        tick.setAttribute('x2', pInner.x.toString());
+        tick.setAttribute('y2', pInner.y.toString());
+        tick.setAttribute('stroke', isTen ? '#171717' : '#737373');
+        tick.setAttribute('class', isTen ? 'dark:stroke-neutral-200' : 'dark:stroke-neutral-500');
+        tick.setAttribute('stroke-width', isTen ? '1.5' : '1');
+        group.appendChild(tick);
+
+        // Degree numbers on every 10th tick
+        if (isTen && deg % 10 === 0) {
+          const pText = polarToCartesian(origin.x, origin.y, currentRadius - 30, deg);
+          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          text.setAttribute('x', pText.x.toString());
+          text.setAttribute('y', (pText.y + 4).toString());
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('font-size', '11');
+          text.setAttribute('font-family', 'monospace');
+          text.setAttribute('font-weight', '600');
+          text.setAttribute('fill', '#171717');
+          text.setAttribute('class', 'dark:fill-neutral-300 select-none');
+          text.textContent = deg.toString();
+          group.appendChild(text);
+
+          // Inner reversed scale for 180 mode (classic protractor dual scale)
+          if (!is360 && deg >= 0 && deg <= 180) {
+            const innerDeg = 180 - deg;
+            const pTextInner = polarToCartesian(origin.x, origin.y, currentRadius - 48, deg);
+            const textInner = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            textInner.setAttribute('x', pTextInner.x.toString());
+            textInner.setAttribute('y', (pTextInner.y + 3).toString());
+            textInner.setAttribute('text-anchor', 'middle');
+            textInner.setAttribute('font-size', '9');
+            textInner.setAttribute('font-family', 'monospace');
+            textInner.setAttribute('fill', '#737373');
+            textInner.setAttribute('class', 'dark:fill-neutral-400 select-none');
+            textInner.textContent = innerDeg.toString();
+            group.appendChild(textInner);
+          }
+        }
+      }
+
+      // 3. Highlighted Angle Sector Wedge (Pie shape between Ray 1 and Ray 2)
+      const pRay1 = polarToCartesian(origin.x, origin.y, currentRadius * 0.9, angle1);
+      const pRay2 = polarToCartesian(origin.x, origin.y, currentRadius * 0.9, angle2);
+
+      const sectorArcRadius = currentRadius * 0.35;
+      const pArc1 = polarToCartesian(origin.x, origin.y, sectorArcRadius, angle1);
+      const pArc2 = polarToCartesian(origin.x, origin.y, sectorArcRadius, angle2);
+
+      // Arc flag
+      let arcDiff = angle2 - angle1;
+      if (arcDiff < 0) arcDiff += 360;
+      const largeArcFlag = arcDiff > 180 ? 1 : 0;
+
+      const sectorPath = `M ${origin.x} ${origin.y} L ${pArc1.x} ${pArc1.y} A ${sectorArcRadius} ${sectorArcRadius} 0 ${largeArcFlag} 0 ${pArc2.x} ${pArc2.y} Z`;
+      const sectorElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      sectorElem.setAttribute('d', sectorPath);
+      sectorElem.setAttribute('fill', 'rgba(59, 130, 246, 0.25)'); // Blue tint
+      sectorElem.setAttribute('stroke', '#3b82f6');
+      sectorElem.setAttribute('stroke-width', '1.5');
+      group.appendChild(sectorElem);
+
+      // 4. Ray 1 (Base Line - Emerald/Green)
+      const ray1Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      ray1Line.setAttribute('x1', origin.x.toString());
+      ray1Line.setAttribute('y1', origin.y.toString());
+      ray1Line.setAttribute('x2', pRay1.x.toString());
+      ray1Line.setAttribute('y2', pRay1.y.toString());
+      ray1Line.setAttribute('stroke', '#10b981');
+      ray1Line.setAttribute('stroke-width', '3');
+      ray1Line.setAttribute('stroke-linecap', 'round');
+      group.appendChild(ray1Line);
+
+      // Ray 1 draggable handle
+      const ray1Handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      ray1Handle.setAttribute('cx', pRay1.x.toString());
+      ray1Handle.setAttribute('cy', pRay1.y.toString());
+      ray1Handle.setAttribute('r', '10');
+      ray1Handle.setAttribute('fill', '#10b981');
+      ray1Handle.setAttribute('stroke', '#ffffff');
+      ray1Handle.setAttribute('stroke-width', '2.5');
+      ray1Handle.setAttribute('class', 'grab-cursor drop-shadow-md');
+      ray1Handle.setAttribute('data-handle', 'ray1');
+      group.appendChild(ray1Handle);
+
+      // 5. Ray 2 (Measuring Arm - Blue)
+      const ray2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      ray2Line.setAttribute('x1', origin.x.toString());
+      ray2Line.setAttribute('y1', origin.y.toString());
+      ray2Line.setAttribute('x2', pRay2.x.toString());
+      ray2Line.setAttribute('y2', pRay2.y.toString());
+      ray2Line.setAttribute('stroke', '#3b82f6');
+      ray2Line.setAttribute('stroke-width', '3');
+      ray2Line.setAttribute('stroke-linecap', 'round');
+      group.appendChild(ray2Line);
+
+      // Ray 2 draggable handle
+      const ray2Handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      ray2Handle.setAttribute('cx', pRay2.x.toString());
+      ray2Handle.setAttribute('cy', pRay2.y.toString());
+      ray2Handle.setAttribute('r', '10');
+      ray2Handle.setAttribute('fill', '#3b82f6');
+      ray2Handle.setAttribute('stroke', '#ffffff');
+      ray2Handle.setAttribute('stroke-width', '2.5');
+      ray2Handle.setAttribute('class', 'grab-cursor drop-shadow-md');
+      ray2Handle.setAttribute('data-handle', 'ray2');
+      group.appendChild(ray2Handle);
+
+      // 6. Center Origin Vertex handle
+      const centerHandle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      centerHandle.setAttribute('cx', origin.x.toString());
+      centerHandle.setAttribute('cy', origin.y.toString());
+      centerHandle.setAttribute('r', '9');
+      centerHandle.setAttribute('fill', '#171717');
+      centerHandle.setAttribute('stroke', '#ffffff');
+      centerHandle.setAttribute('stroke-width', '2.5');
+      centerHandle.setAttribute('class', 'grab-cursor drop-shadow-md dark:fill-white dark:stroke-neutral-900');
+      centerHandle.setAttribute('data-handle', 'center');
+      group.appendChild(centerHandle);
+
+      // Update Live Readout Elements
+      updateReadouts(measuredAngle);
+    }
+
+    function updateReadouts(deg) {
+      const roundedDeg = deg.toFixed(1);
+      if (readoutDeg) readoutDeg.textContent = roundedDeg;
+
+      // Radian
+      const rad = (deg * Math.PI) / 180;
+      if (readoutRad) readoutRad.textContent = `${rad.toFixed(3)} rad`;
+
+      // Gradian
+      const grad = (deg * 400) / 360;
+      if (readoutGrad) readoutGrad.textContent = `${grad.toFixed(1)} grad`;
+
+      // Supplementary (180 - deg)
+      const supp = Math.max(0, 180 - deg);
+      if (readoutSupp) readoutSupp.textContent = `${supp.toFixed(1)}°`;
+
+      // Complementary (90 - deg)
+      const comp = deg <= 90 ? (90 - deg).toFixed(1) + '°' : 'None (>90°)';
+      if (readoutComp) readoutComp.textContent = comp;
+
+      // Reflex (360 - deg)
+      const reflex = (360 - deg).toFixed(1);
+      if (readoutReflex) readoutReflex.textContent = `${reflex}°`;
+
+      // Slope % = tan(deg) * 100
+      if (deg === 90 || deg === 270) {
+        if (readoutSlope) readoutSlope.textContent = 'Infinite (Vertical)';
+      } else {
+        const slope = Math.abs(Math.tan(rad) * 100);
+        if (readoutSlope) readoutSlope.textContent = `${slope.toFixed(1)}%`;
+      }
+
+      // Classification Badge
+      let classification = 'Acute Angle';
+      let badgeStyle = 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-900';
+
+      if (deg === 0) {
+        classification = 'Zero Angle (0°)';
+      } else if (deg > 0 && deg < 90) {
+        classification = 'Acute Angle (<90°)';
+      } else if (Math.abs(deg - 90) < 0.2) {
+        classification = 'Right Angle (90°)';
+        badgeStyle = 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900';
+      } else if (deg > 90 && deg < 180) {
+        classification = 'Obtuse Angle (90°-180°)';
+        badgeStyle = 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-900';
+      } else if (Math.abs(deg - 180) < 0.2) {
+        classification = 'Straight Angle (180°)';
+        badgeStyle = 'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-purple-200 dark:border-purple-900';
+      } else if (deg > 180 && deg < 360) {
+        classification = 'Reflex Angle (180°-360°)';
+        badgeStyle = 'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-900';
+      } else if (Math.abs(deg - 360) < 0.2) {
+        classification = 'Full Rotation (360°)';
+      }
+
+      if (classificationBadge) {
+        classificationBadge.textContent = classification;
+        classificationBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-medium border ${badgeStyle}`;
+      }
+    }
+
+    // Convert SVG mouse/touch event coordinates to SVG viewbox coords
+    function getSvgCoordinates(e) {
+      if (!svg) return { x: 0, y: 0 };
+      const pt = svg.createSVGPoint();
+      if (e.touches && e.touches.length > 0) {
+        pt.x = e.touches[0].clientX;
+        pt.y = e.touches[0].clientY;
+      } else {
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+      }
+      const ctm = svg.getScreenCTM();
+      if (ctm) {
+        return pt.matrixTransform(ctm.inverse());
+      }
+      return { x: 0, y: 0 };
+    }
+
+    // Pointer Event Listeners
+    function onPointerDown(e) {
+      const target = e.target;
+      const handle = target.getAttribute('data-handle');
+      if (handle) {
+        activeDrag = handle;
+        const coords = getSvgCoordinates(e);
+        dragStart = coords;
+        initialOrigin = { ...origin };
+        e.preventDefault();
+      }
+    }
+
+    function onPointerMove(e) {
+      if (!activeDrag) return;
+      const coords = getSvgCoordinates(e);
+
+      if (activeDrag === 'center') {
+        // Move entire protractor
+        const dx = coords.x - dragStart.x;
+        const dy = coords.y - dragStart.y;
+        origin.x = Math.max(50, Math.min(950, initialOrigin.x + dx));
+        origin.y = Math.max(50, Math.min(650, initialOrigin.y + dy));
+      } else if (activeDrag === 'ray1' || activeDrag === 'ray2') {
+        // Calculate angle from origin to current pointer
+        const dx = coords.x - origin.x;
+        const dy = origin.y - coords.y; // Inverted SVG y
+        let deg = (Math.atan2(dy, dx) * 180) / Math.PI;
+        if (deg < 0) deg += 360;
+
+        if (snap1Deg) {
+          deg = Math.round(deg);
+        }
+
+        if (activeDrag === 'ray1') {
+          angle1 = deg;
+        } else {
+          angle2 = deg;
+        }
+      }
+
+      renderProtractor();
+      e.preventDefault();
+    }
+
+    function onPointerUp() {
+      activeDrag = null;
+    }
+
+    // Register Pointer / Touch Listeners
+    svg?.addEventListener('mousedown', onPointerDown);
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('mouseup', onPointerUp);
+
+    svg?.addEventListener('touchstart', onPointerDown, { passive: false });
+    window.addEventListener('touchmove', onPointerMove, { passive: false });
+    window.addEventListener('touchend', onPointerUp);
+
+    // Preset Angle buttons
+    document.querySelectorAll('.preset-angle-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const targetDeg = parseFloat(btn.getAttribute('data-preset') || '45');
+        angle1 = 0;
+        angle2 = targetDeg;
+        renderProtractor();
+      });
+    });
+
+    // Snap Checkbox
+    snapCheckbox?.addEventListener('change', (e) => {
+      snap1Deg = e.target.checked;
+    });
+
+    // Opacity Slider
+    opacitySlider?.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      opacity = val / 100;
+      if (opacityLabel) opacityLabel.textContent = `${val}%`;
+      renderProtractor();
+    });
+
+    // Scale Slider
+    scaleSlider?.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      radius = (260 * val) / 100;
+      if (scaleLabel) scaleLabel.textContent = `${val}%`;
+      renderProtractor();
+    });
+
+    // Reset Button
+    resetBtn?.addEventListener('click', () => {
+      origin = { x: 500, y: 440 };
+      angle1 = 0;
+      angle2 = 45;
+      radius = 260;
+      if (scaleSlider) scaleSlider.value = '100';
+      if (scaleLabel) scaleLabel.textContent = '100%';
+      renderProtractor();
+    });
+
+    // 180 vs 360 mode buttons
+    mode180Btn?.addEventListener('click', () => {
+      mode = '180';
+      origin = { x: 500, y: 440 };
+      mode180Btn.className = 'px-4 py-2 text-xs font-semibold rounded-lg transition-all bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm';
+      mode360Btn.className = 'px-4 py-2 text-xs font-semibold rounded-lg transition-all text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white';
+      renderProtractor();
+    });
+
+    mode360Btn?.addEventListener('click', () => {
+      mode = '360';
+      origin = { x: 500, y: 350 };
+      mode360Btn.className = 'px-4 py-2 text-xs font-semibold rounded-lg transition-all bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm';
+      mode180Btn.className = 'px-4 py-2 text-xs font-semibold rounded-lg transition-all text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white';
+      renderProtractor();
+    });
+
+    // Copy Angle Result
+    copyBtn?.addEventListener('click', () => {
+      const deg = getMeasuredAngle().toFixed(1);
+      const rad = ((deg * Math.PI) / 180).toFixed(3);
+      const textToCopy = `Measured Angle: ${deg}° (${rad} rad) - via aionlineprotractor.com`;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        if (copyBtnText) copyBtnText.textContent = 'Copied to Clipboard!';
+        setTimeout(() => {
+          if (copyBtnText) copyBtnText.textContent = 'Copy Angle Result';
+        }, 2000);
+      });
+    });
+
+    // Initial render
+    renderProtractor();
+  })();
+</script>
