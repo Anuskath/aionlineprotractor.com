@@ -3,87 +3,130 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout
-  title="Contact Support - AI Online Protractor"
-  description="Contact the team behind AI Online Protractor. Submit feature suggestions, bug reports, or questions."
+  title="Contact Us - AI Online Protractor"
+  description="Contact the creators of AI Online Protractor. Send questions, feature suggestions, partnership inquiries, or calibration bug reports."
   canonical="https://aionlineprotractor.com/contact"
   currentPath="/contact"
 >
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-    <div class="border-b border-neutral-200 dark:border-neutral-800 pb-6 text-center space-y-2">
-      <h1 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">Contact & Feedback</h1>
-      <p class="text-sm text-neutral-600 dark:text-neutral-400">
-        Have a feature request, bug report, or calibration question? We'd love to hear from you.
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+    <!-- Header -->
+    <div class="border-b border-neutral-200 dark:border-neutral-800 pb-8 text-center space-y-3">
+      <span class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500">
+        Support & Collaboration
+      </span>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white">
+        Contact Us
+      </h1>
+      <p class="text-base text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
+        Have a question, calibration feedback, or a feature request? We're here to help.
       </p>
     </div>
 
-    <!-- Contact Info Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 space-y-2">
-        <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">
+    <!-- Contact Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <!-- Direct Email -->
+      <div class="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs space-y-2">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-lg">
           ✉️
         </div>
         <h3 class="font-bold text-base text-neutral-900 dark:text-white">Direct Email</h3>
-        <p class="text-xs text-neutral-500 font-mono">hello@aionlineprotractor.com</p>
-        <p class="text-xs text-neutral-600 dark:text-neutral-400 pt-2">
-          Responses typically sent within 24–48 hours.
+        <p class="text-xs text-neutral-500 dark:text-neutral-400">Reach our team anytime:</p>
+        <p class="text-xs font-mono font-semibold text-neutral-900 dark:text-neutral-100 pt-1">
+          hello@aionlineprotractor.com
         </p>
+        <span class="text-[11px] text-neutral-500 block">Response within 24–48 hours</span>
       </div>
 
-      <div class="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 space-y-2">
-        <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm">
+      <!-- Feature Requests -->
+      <div class="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs space-y-2">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-lg">
           💡
         </div>
         <h3 class="font-bold text-base text-neutral-900 dark:text-white">Feature Requests</h3>
-        <p class="text-xs text-neutral-600 dark:text-neutral-400">
-          Want a specific custom angle preset, CAD overlay feature, or unit conversion? Let us know!
+        <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          Need custom degrees, CAD export, goniometer axes, or specialized angle conversions? Let us know!
+        </p>
+      </div>
+
+      <!-- Bug Reports & Accuracy -->
+      <div class="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs space-y-2">
+        <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-lg">
+          🛠️
+        </div>
+        <h3 class="font-bold text-base text-neutral-900 dark:text-white">Bug Reports</h3>
+        <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          Noticed an alignment or touch issue on a specific phone or browser? Tell us your device model for quick fixes.
         </p>
       </div>
     </div>
 
-    <!-- Contact Form with mailto trigger -->
-    <div class="p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xs space-y-4">
-      <h3 class="font-bold text-lg text-neutral-900 dark:text-white">Send Us a Message</h3>
-      
-      <form id="contact-form" class="space-y-4 text-xs">
-        <div>
-          <label for="name" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1">Your Name</label>
-          <input
-            id="name"
-            type="text"
-            required
-            placeholder="John Doe"
-            class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
-          />
+    <!-- Contact Form Card -->
+    <div class="max-w-2xl mx-auto p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xs space-y-6">
+      <div class="space-y-1">
+        <h2 class="font-bold text-xl text-neutral-900 dark:text-white">Send Us a Direct Message</h2>
+        <p class="text-xs text-neutral-500">Fill out this quick form to contact our support team.</p>
+      </div>
+
+      <form id="contact-form" class="space-y-4 text-xs sm:text-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="name" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Your Name</label>
+            <input
+              id="name"
+              type="text"
+              required
+              placeholder="e.g. Alex Miller"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Your Email</label>
+            <input
+              id="email"
+              type="email"
+              required
+              placeholder="alex@example.com"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
+            />
+          </div>
         </div>
 
         <div>
-          <label for="email" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1">Your Email</label>
-          <input
-            id="email"
-            type="email"
-            required
-            placeholder="john@example.com"
+          <label for="subject" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Subject / Topic</label>
+          <select
+            id="subject"
             class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
-          />
+          >
+            <option value="General Inquiry">General Question</option>
+            <option value="Feature Suggestion">Feature Suggestion</option>
+            <option value="Bug Report">Bug or Calibration Report</option>
+            <option value="Educational / Classroom Use">Educational / Classroom Use</option>
+            <option value="Partnership / Advertising">Partnership / Advertising</option>
+          </select>
         </div>
 
         <div>
-          <label for="message" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1">Message</label>
+          <label for="message" class="block font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Your Message</label>
           <textarea
             id="message"
-            rows="4"
+            rows="5"
             required
-            placeholder="Describe your feedback, feature request, or question..."
+            placeholder="Tell us what's on your mind..."
             class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white"
           ></textarea>
         </div>
 
         <button
           type="submit"
-          class="w-full py-3 px-4 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 font-semibold text-xs hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
+          class="w-full py-3.5 px-4 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 font-semibold text-sm hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs cursor-pointer active:scale-98"
         >
           Submit Message
         </button>
+
+        <div id="contact-status" class="hidden p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 text-xs text-center font-medium">
+          ✓ Opening your email client to dispatch message. Thank you for reaching out!
+        </div>
       </form>
     </div>
   </div>
@@ -94,10 +137,16 @@ import Layout from '../layouts/Layout.astro';
     e.preventDefault();
     const name = document.getElementById('name')?.value || '';
     const email = document.getElementById('email')?.value || '';
+    const subjectChoice = document.getElementById('subject')?.value || 'General Inquiry';
     const msg = document.getElementById('message')?.value || '';
+    const status = document.getElementById('contact-status');
 
-    const subject = encodeURIComponent(`Inquiry from ${name} (AI Online Protractor)`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+    if (status) {
+      status.classList.remove('hidden');
+    }
+
+    const subject = encodeURIComponent(`[${subjectChoice}] from ${name} (AI Online Protractor)`);
+    const body = encodeURIComponent(`Hello AI Online Protractor Team,\n\nName: ${name}\nEmail: ${email}\nTopic: ${subjectChoice}\n\nMessage:\n${msg}\n\n---\nSent from aionlineprotractor.com/contact`);
 
     window.location.href = `mailto:hello@aionlineprotractor.com?subject=${subject}&body=${body}`;
   });

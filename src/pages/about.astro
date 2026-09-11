@@ -4,53 +4,129 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout
   title="About Us - AI Online Protractor"
-  description="Learn about the mission, precision geometry engine, and team behind AI Online Protractor (aionlineprotractor.com)."
+  description="Learn about the mission, precision geometry engine, client-side privacy architecture, and creators of AI Online Protractor (aionlineprotractor.com)."
   canonical="https://aionlineprotractor.com/about"
   currentPath="/about"
 >
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
-    <div class="border-b border-neutral-200 dark:border-neutral-800 pb-6">
-      <span class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500">
-        Our Mission & Technology
-      </span>
-      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white mt-1">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+    <!-- Header Hero -->
+    <div class="border-b border-neutral-200 dark:border-neutral-800 pb-8 space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900 text-xs font-mono font-semibold text-emerald-700 dark:text-emerald-300">
+        <span>📐 Mathematical Excellence & Open Web</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white">
         About AI Online Protractor
       </h1>
-      <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-2">
-        Building high-precision, zero-friction mathematical instruments accessible to anyone with a browser.
+      <p class="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
+        We are on a mission to build the world's most precise, fast, and accessible digital angle measurement instrument—free for everyone, everywhere.
       </p>
     </div>
 
-    <div class="space-y-8 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-      <section class="space-y-3">
-        <h2 class="text-xl font-bold text-neutral-900 dark:text-white">Why We Built This</h2>
-        <p>
-          Traditional plastic protractors are prone to parallax errors, easily misplaced, and impossible to overlay on digital documents, photos, or CAD drawings. Most existing online protractors were built over a decade ago—plagued with clunky slider controls, disruptive video ads, missing dark mode, and broken mobile touch support.
-        </p>
-        <p>
-          <strong>AI Online Protractor</strong> was created to solve these exact frustrations. We set out to build a lightweight, beautiful, and distraction-free angle measuring tool that feels like a native desktop CAD application while loading instantly in any web browser.
-        </p>
-      </section>
+    <!-- Section 1: The Problem & Our Story -->
+    <section class="space-y-4 text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
+      <h2 class="text-2xl font-bold text-neutral-900 dark:text-white">Why We Built This Tool</h2>
+      <p>
+        For centuries, students, drafters, carpenters, and engineers relied on physical clear plastic protractors. While functional on physical sheets of drafting paper, plastic rulers fail miserably in modern digital environments:
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div class="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs">
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1.5">❌ The Legacy Way</h3>
+          <ul class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 space-y-1.5 list-disc list-inside">
+            <li>Parallax distortion due to ruler acrylic thickness.</li>
+            <li>Inability to overlay on PDFs, camera photos, or CAD files.</li>
+            <li>Legacy web protractors riddled with intrusive video ads, Flash applets, and broken mobile touch dragging.</li>
+            <li>Lack of modern dark mode, radians, or slope gradient conversions.</li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200/60 dark:border-emerald-900/60 shadow-2xs">
+          <h3 class="font-bold text-base text-emerald-900 dark:text-emerald-300 mb-1.5">✅ The AI Online Protractor Way</h3>
+          <ul class="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 space-y-1.5 list-disc list-inside">
+            <li>Sub-pixel SVG vector precision with 0.1° decimal accuracy.</li>
+            <li>Direct PDF, image, and live device camera overlay support.</li>
+            <li>In-browser computer vision line scanning with instant ray alignment.</li>
+            <li>100% client-side privacy, zero installation, and free forever.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-      <section class="space-y-3">
-        <h2 class="text-xl font-bold text-neutral-900 dark:text-white">Core Technology & Precision</h2>
-        <p>
-          Our application is built on cutting-edge web standards:
-        </p>
-        <ul class="list-disc list-inside space-y-2 pl-2">
-          <li><strong>Sub-Pixel SVG Vector Math:</strong> High-resolution vector geometry ensures degree tick marks remain sharp on high-DPI 4K and Retina displays.</li>
-          <li><strong>Unified Pointer Events:</strong> Smooth, low-latency ray dragging with identical precision across Apple Pencil, stylus, touch, trackpads, and mouse pointers.</li>
-          <li><strong>100% Client-Side Privacy:</strong> Image processing takes place directly in your device's memory. No uploaded blueprints or diagrams are sent over the network.</li>
-          <li><strong>Zero JS Overhead:</strong> Built with Astro static architecture for near-zero First Contentful Paint (FCP) and maximum Core Web Vitals speed.</li>
-        </ul>
-      </section>
+    <!-- Section 2: Core Technology Architecture -->
+    <section class="space-y-4 text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
+      <h2 class="text-2xl font-bold text-neutral-900 dark:text-white">Engineering & Precision Standards</h2>
+      <p>
+        AI Online Protractor is engineered with strict mathematical rigour and modern web performance standards:
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        <div class="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs">
+          <div class="text-2xl mb-2">📐</div>
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1">SVG Vector Engine</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Scalable vector graphics render mathematical degree ticks with perfect anti-aliasing on high-DPI 4K and Retina screens.
+          </p>
+        </div>
+        <div class="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs">
+          <div class="text-2xl mb-2">🔒</div>
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1">Zero-Cloud Privacy</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            All blueprints, PDF worksheets, and camera frames are decoded locally in your browser RAM. Nothing is ever uploaded to our servers.
+          </p>
+        </div>
+        <div class="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs">
+          <div class="text-2xl mb-2">⚡</div>
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1">Astro Static Speed</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Compiled to lightweight HTML with zero hydration bloat, achieving 100/100 Google Lighthouse Core Web Vitals speed scores.
+          </p>
+        </div>
+      </div>
+    </section>
 
-      <section class="space-y-3">
-        <h2 class="text-xl font-bold text-neutral-900 dark:text-white">Open Web Standards</h2>
-        <p>
-          We believe high-quality educational and engineering tools should be free and accessible to all students, carpenters, engineers, and teachers without requiring paywalls or mandatory accounts.
-        </p>
-      </section>
-    </div>
+    <!-- Section 3: Who We Serve -->
+    <section class="space-y-4 text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
+      <h2 class="text-2xl font-bold text-neutral-900 dark:text-white">Who Uses AI Online Protractor?</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div class="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50">
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1">🎓 Students & Educators</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            From 4th-grade Common Core angle classifications to AP Calculus trigonometry and university physics labs, students use our tool to verify homework assignments and practice angle readings interactively.
+          </p>
+        </div>
+        <div class="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50">
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1">🏛️ Architects & Engineers</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Inspect elevation schematics, check roof pitch slopes, verify ramp compliance, and extract precise joint angles from PDF plan sets without exporting to full CAD suites.
+          </p>
+        </div>
+        <div class="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50">
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1">🪵 Woodworkers & DIYers</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Take a photo of physical crown moldings or furniture joints with your smartphone camera and determine true miter saw bevel settings in seconds.
+          </p>
+        </div>
+        <div class="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50">
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-1">🩺 Medical & Biomechanics</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Physical therapists and orthopedic clinicians measure joint range of motion (ROM) and bone angles on X-ray and posture photography with complete HIPAA-friendly local privacy.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Get In Touch -->
+    <section class="p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xs space-y-3 text-center">
+      <h2 class="text-xl font-bold text-neutral-900 dark:text-white">Have Questions or Suggestions?</h2>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
+        We actively develop and improve AI Online Protractor based on user feedback. If you have feature requests or calibration ideas, we'd love to connect.
+      </p>
+      <div class="pt-2">
+        <a
+          href="/contact"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 font-semibold text-sm hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
+        >
+          <span>Contact Our Team</span>
+          <span>→</span>
+        </a>
+      </div>
+    </section>
   </div>
 </Layout>
