@@ -80,15 +80,15 @@ const faqs = [
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
       {angleTypes.map((item) => (
-        <div class="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xs flex flex-col justify-between hover:border-neutral-300 dark:hover:border-neutral-700 transition-all">
+        <div class="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xs flex flex-col justify-between hover:border-neutral-300 dark:hover:border-neutral-700 transition-all">
           <div>
             <div class="flex items-center justify-between mb-3">
-              <h3 class="font-bold text-base text-neutral-900 dark:text-white">{item.name}</h3>
-              <span class="font-mono text-xs px-2.5 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-semibold">
+              <h3 class="font-bold text-lg text-neutral-900 dark:text-white">{item.name}</h3>
+              <span class="font-mono text-sm px-3 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-semibold">
                 {item.range}
               </span>
             </div>
-            <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
               {item.description}
             </p>
           </div>
@@ -100,51 +100,51 @@ const faqs = [
   <!-- Section 2: Real-World Use Cases -->
   <div class="bg-neutral-100/60 dark:bg-neutral-900/60 rounded-3xl p-8 sm:p-12 border border-neutral-200 dark:border-neutral-800">
     <div class="max-w-3xl mb-8">
-      <span class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500 block mb-1">
+      <span class="text-xs sm:text-sm font-mono font-semibold uppercase tracking-wider text-neutral-500 block mb-1">
         Practical Applications
       </span>
-      <h3 class="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white">
+      <h3 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white">
         Who Uses An Online Protractor?
       </h3>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
-      <div class="space-y-2">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
+      <div class="space-y-2.5">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-lg">
           📐
         </div>
-        <h4 class="font-semibold text-neutral-900 dark:text-white text-sm">Students & Teachers</h4>
-        <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+        <h4 class="font-semibold text-neutral-900 dark:text-white text-base">Students & Teachers</h4>
+        <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-sm">
           Verify geometry homework, measure triangle angles on digital PDF worksheets, and demonstrate angle principles on interactive smartboards.
         </p>
       </div>
 
-      <div class="space-y-2">
-        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+      <div class="space-y-2.5">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-lg">
           🏛️
         </div>
-        <h4 class="font-semibold text-neutral-900 dark:text-white text-sm">Architects & Drafters</h4>
-        <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+        <h4 class="font-semibold text-neutral-900 dark:text-white text-base">Architects & Drafters</h4>
+        <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-sm">
           Check roof pitches, staircase slope gradients, and verify CAD elevation angles directly on uploaded blueprint screenshots.
         </p>
       </div>
 
-      <div class="space-y-2">
-        <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+      <div class="space-y-2.5">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-lg">
           🎨
         </div>
-        <h4 class="font-semibold text-neutral-900 dark:text-white text-sm">Designers & Artists</h4>
-        <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+        <h4 class="font-semibold text-neutral-900 dark:text-white text-base">Designers & Artists</h4>
+        <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-sm">
           Align perspective guidelines, compute isometric grid lines (30°/60°), and balance typography angles in illustrations.
         </p>
       </div>
 
-      <div class="space-y-2">
-        <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+      <div class="space-y-2.5">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-lg">
           🪚
         </div>
-        <h4 class="font-semibold text-neutral-900 dark:text-white text-sm">DIY & Woodworking</h4>
-        <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+        <h4 class="font-semibold text-neutral-900 dark:text-white text-base">DIY & Woodworking</h4>
+        <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-sm">
           Calculate miter saw angles, measure joint bevels from digital photos, and find true bevel angles before making physical cuts.
         </p>
       </div>
@@ -154,22 +154,22 @@ const faqs = [
   <!-- Section 3: FAQ Accordion for Rich Snippet SEO -->
   <div class="max-w-4xl mx-auto">
     <div class="text-center mb-10">
-      <span class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500 block mb-1">
+      <span class="text-xs sm:text-sm font-mono font-semibold uppercase tracking-wider text-neutral-500 block mb-1">
         Help & Guidance
       </span>
-      <h3 class="text-2xl font-bold text-neutral-900 dark:text-white">
+      <h3 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white">
         Frequently Asked Questions
       </h3>
     </div>
 
     <div class="space-y-4">
       {faqs.map((faq) => (
-        <details class="group p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition-all [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex items-center justify-between cursor-pointer font-medium text-sm text-neutral-900 dark:text-neutral-100 gap-4">
+        <details class="group p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition-all [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer font-semibold text-base sm:text-lg text-neutral-900 dark:text-neutral-100 gap-4">
             <span>{faq.q}</span>
-            <span class="transition-transform group-open:rotate-180 text-neutral-400 text-xs">▼</span>
+            <span class="transition-transform group-open:rotate-180 text-neutral-400 text-sm">▼</span>
           </summary>
-          <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-3 pt-3 border-t border-neutral-100 dark:border-neutral-800 leading-relaxed">
+          <p class="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 mt-3 pt-3 border-t border-neutral-100 dark:border-neutral-800 leading-relaxed">
             {faq.a}
           </p>
         </details>
