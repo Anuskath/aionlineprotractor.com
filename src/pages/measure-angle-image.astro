@@ -6,24 +6,24 @@ import AngleKnowledge from '../components/AngleKnowledge.astro';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'Image Angle Finder & Blueprint Protractor',
+  name: 'AI Image & PDF Angle Finder - Smart Protractor',
   url: 'https://aionlineprotractor.com/measure-angle-image',
-  description: 'Upload any image, CAD drawing, blueprint, or photo and measure angles with an on-screen transparent protractor.',
+  description: 'Upload any image, multi-page PDF, CAD drawing, blueprint, or photo. Auto-detect diagram angles with in-browser AI and measure with sub-pixel precision.',
   applicationCategory: 'UtilitiesApplication',
 };
 ---
 
 <Layout
-  title="Measure Angle on Image Online - Digital Image Protractor"
-  description="Upload any photo, blueprint, or diagram to measure angles accurately. Adjust protractor transparency and drag vertex handles directly on your image."
+  title="AI Measure Angle on Image & PDF Online - Smart Digital Protractor"
+  description="Upload any photo, multi-page PDF, blueprint, or homework diagram. AI automatically scans lines and calculates angle degrees with transparent interactive protractor overlay."
   canonical="https://aionlineprotractor.com/measure-angle-image"
   jsonLd={jsonLd}
   currentPath="/measure-angle-image"
 >
   <ProtractorApp
     initialMode="180"
-    pageTitle="Image Angle Finder & Blueprint Protractor"
-    pageSubtitle="Upload your blueprint, CAD drawing, or photo. Adjust the transparency slider to measure slope and joint angles directly on the picture."
+    pageTitle="AI Image & PDF Angle Finder"
+    pageSubtitle="Upload your blueprint, PDF worksheet, or diagram photo. Click 'AI Auto-Detect Angle' to instantly find corner angles, or drag handles to fine-tune."
     allowImageUpload={true}
   />
   <AngleKnowledge />

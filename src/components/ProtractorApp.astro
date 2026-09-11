@@ -57,22 +57,44 @@ const {
     <div class="lg:col-span-8 flex flex-col gap-3">
       <!-- Toolbar Header above canvas -->
       <div class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-neutral-900 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           {allowImageUpload && (
-            <label class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 text-sm font-medium rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <label class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors shadow-2xs">
+              <svg class="w-4 h-4 text-neutral-600 dark:text-neutral-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              <span>Upload Image</span>
-              <input id="image-loader" type="file" accept="image/*" class="hidden" />
+              <span>Upload Image / PDF</span>
+              <input id="image-loader" type="file" accept="image/*,application/pdf" class="hidden" />
             </label>
           )}
+
+          <!-- AI Auto-Detect Angle Button -->
+          <button
+            id="auto-detect-btn"
+            type="button"
+            class="hidden inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition-all active:scale-95 cursor-pointer"
+            title="Scan diagram with AI and snap protractor onto detected angle"
+          >
+            <svg id="auto-detect-spinner" class="w-4 h-4 animate-spin hidden text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+            <span id="auto-detect-icon">✨</span>
+            <span id="auto-detect-text">AI Auto-Detect Angle</span>
+          </button>
+
+          <!-- PDF Multi-Page Navigation Bar -->
+          <div id="pdf-controls" class="hidden items-center gap-1.5 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1.5 rounded-lg text-xs font-mono border border-neutral-200 dark:border-neutral-700">
+            <button id="pdf-prev-btn" type="button" class="w-6 h-6 rounded flex items-center justify-center hover:bg-neutral-200 dark:hover:bg-neutral-700 font-bold" title="Previous page">◀</button>
+            <span id="pdf-page-indicator" class="text-neutral-700 dark:text-neutral-300 font-semibold px-1">Page 1 / 1</span>
+            <button id="pdf-next-btn" type="button" class="w-6 h-6 rounded flex items-center justify-center hover:bg-neutral-200 dark:hover:bg-neutral-700 font-bold" title="Next page">▶</button>
+          </div>
 
           <button
             id="clear-img-btn"
             class="hidden text-sm font-medium text-rose-500 hover:text-rose-600 px-2.5 py-1.5 transition-colors"
           >
-            Remove Image
+            Remove
           </button>
         </div>
 
@@ -107,6 +129,15 @@ const {
 
         <!-- Subtle Grid Background -->
         <div class="absolute inset-0 bg-[radial-gradient(#d4d4d4_1px,transparent_1px)] dark:bg-[radial-gradient(#262626_1px,transparent_1px)] [background-size:20px_20px] opacity-60 pointer-events-none"></div>
+
+        <!-- AI Scanning Laser Sweep Bar -->
+        <div id="ai-scanner-line" class="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_15px_#10b981] pointer-events-none hidden transition-all duration-75"></div>
+
+        <!-- AI Notification Status Toast -->
+        <div id="ai-status-toast" class="absolute top-4 inset-x-4 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 bg-neutral-950/95 dark:bg-white text-white dark:text-neutral-950 text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg pointer-events-none hidden items-center gap-2 z-20 transition-all border border-emerald-500/30">
+          <span id="ai-toast-icon">✨</span>
+          <span id="ai-toast-msg">Angle auto-detected! Drag handles to fine-tune.</span>
+        </div>
 
         <!-- SVG Interactive Protractor Container -->
         <svg
@@ -281,20 +312,127 @@ const {
     const imageLoader = document.getElementById('image-loader');
     const uploadedPreviewImg = document.getElementById('uploaded-preview-img');
     const clearImgBtn = document.getElementById('clear-img-btn');
+    const autoDetectBtn = document.getElementById('auto-detect-btn');
+    const autoDetectSpinner = document.getElementById('auto-detect-spinner');
+    const autoDetectIcon = document.getElementById('auto-detect-icon');
+    const autoDetectText = document.getElementById('auto-detect-text');
+    const pdfControls = document.getElementById('pdf-controls');
+    const pdfPrevBtn = document.getElementById('pdf-prev-btn');
+    const pdfNextBtn = document.getElementById('pdf-next-btn');
+    const pdfPageIndicator = document.getElementById('pdf-page-indicator');
 
-    // Handle Image Loading
-    imageLoader?.addEventListener('change', (e) => {
+    let currentPdfDoc = null;
+    let currentPdfPage = 1;
+    let totalPdfPages = 1;
+
+    // Dynamically load PDF.js from CDN if needed
+    async function ensurePdfJs() {
+      if (window.pdfjsLib) return window.pdfjsLib;
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        script.onload = () => {
+          if (window.pdfjsLib) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            resolve(window.pdfjsLib);
+          } else {
+            reject(new Error('PDF.js not found'));
+          }
+        };
+        script.onerror = () => reject(new Error('Failed to load PDF library.'));
+        document.head.appendChild(script);
+      });
+    }
+
+    async function renderPdfPage(pageNum) {
+      if (!currentPdfDoc || !uploadedPreviewImg) return;
+      try {
+        const page = await currentPdfDoc.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        uploadedPreviewImg.src = canvas.toDataURL('image/png');
+        uploadedPreviewImg.classList.remove('hidden');
+        clearImgBtn?.classList.remove('hidden');
+        autoDetectBtn?.classList.remove('hidden');
+
+        if (pdfPageIndicator) {
+          pdfPageIndicator.textContent = `Page ${pageNum} / ${totalPdfPages}`;
+        }
+      } catch (err) {
+        console.error('Error rendering PDF page:', err);
+      }
+    }
+
+    // Handle Image & PDF Loading
+    imageLoader?.addEventListener('change', async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (uploadedPreviewImg) {
-          uploadedPreviewImg.src = event.target?.result;
-          uploadedPreviewImg.classList.remove('hidden');
-          clearImgBtn?.classList.remove('hidden');
+
+      const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+
+      if (isPdf) {
+        try {
+          if (autoDetectText) autoDetectText.textContent = 'Loading PDF...';
+          autoDetectBtn?.classList.remove('hidden');
+
+          const pdfLib = await ensurePdfJs();
+          const fileData = await file.arrayBuffer();
+          currentPdfDoc = await pdfLib.getDocument({ data: fileData }).promise;
+          totalPdfPages = currentPdfDoc.numPages;
+          currentPdfPage = 1;
+
+          if (totalPdfPages > 1 && pdfControls) {
+            pdfControls.classList.remove('hidden');
+            pdfControls.classList.add('flex');
+          } else if (pdfControls) {
+            pdfControls.classList.add('hidden');
+            pdfControls.classList.remove('flex');
+          }
+
+          await renderPdfPage(currentPdfPage);
+          if (autoDetectText) autoDetectText.textContent = 'AI Auto-Detect Angle';
+        } catch (err) {
+          console.error(err);
+          alert('Could not render PDF. Please upload a standard PDF or image file.');
         }
-      };
-      reader.readAsDataURL(file);
+      } else {
+        // Standard image file
+        currentPdfDoc = null;
+        if (pdfControls) {
+          pdfControls.classList.add('hidden');
+          pdfControls.classList.remove('flex');
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (uploadedPreviewImg) {
+            uploadedPreviewImg.src = event.target?.result;
+            uploadedPreviewImg.classList.remove('hidden');
+            clearImgBtn?.classList.remove('hidden');
+            autoDetectBtn?.classList.remove('hidden');
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // PDF Pagination
+    pdfPrevBtn?.addEventListener('click', () => {
+      if (currentPdfDoc && currentPdfPage > 1) {
+        currentPdfPage--;
+        renderPdfPage(currentPdfPage);
+      }
+    });
+
+    pdfNextBtn?.addEventListener('click', () => {
+      if (currentPdfDoc && currentPdfPage < totalPdfPages) {
+        currentPdfPage++;
+        renderPdfPage(currentPdfPage);
+      }
     });
 
     clearImgBtn?.addEventListener('click', () => {
@@ -302,8 +440,219 @@ const {
         uploadedPreviewImg.src = '';
         uploadedPreviewImg.classList.add('hidden');
         clearImgBtn?.classList.add('hidden');
+        autoDetectBtn?.classList.add('hidden');
       }
+      if (pdfControls) {
+        pdfControls.classList.add('hidden');
+        pdfControls.classList.remove('flex');
+      }
+      currentPdfDoc = null;
       if (imageLoader) imageLoader.value = '';
+    });
+
+    // In-Browser Computer Vision Diagram Angle Analyzer
+    function analyzeDiagramForAngle(img) {
+      const canvas = document.createElement('canvas');
+      const W = 500;
+      const H = 350;
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return null;
+
+      ctx.drawImage(img, 0, 0, W, H);
+      const imgData = ctx.getImageData(0, 0, W, H);
+      const data = imgData.data;
+
+      // 1. Calculate luminance and background polarity
+      let totalLum = 0;
+      const sampleStep = 8;
+      let samples = 0;
+      for (let i = 0; i < data.length; i += 4 * sampleStep) {
+        totalLum += 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        samples++;
+      }
+      const avgLum = totalLum / samples;
+      const isLightBg = avgLum > 128;
+
+      // 2. Binary stroke edge mask
+      const binary = new Uint8Array(W * H);
+      const threshold = isLightBg ? Math.min(185, avgLum - 25) : Math.max(75, avgLum + 25);
+
+      for (let y = 1; y < H - 1; y++) {
+        for (let x = 1; x < W - 1; x++) {
+          const idx = (y * W + x) * 4;
+          const lum = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
+          binary[y * W + x] = (isLightBg ? (lum < threshold) : (lum > threshold)) ? 1 : 0;
+        }
+      }
+
+      // 3. Radial Ray Cast Angle Detection from Candidate Vertices
+      const rayDirections = 36;
+      const maxDist = 75;
+      let bestCandidate = null;
+      let maxScore = -1;
+
+      const gridStep = 4;
+      for (let y = 35; y < H - 35; y += gridStep) {
+        for (let x = 35; x < W - 35; x += gridStep) {
+          if (binary[y * W + x] !== 1) continue;
+
+          const rayScores = new Float32Array(rayDirections);
+          for (let r = 0; r < rayDirections; r++) {
+            const rad = (r * 10 * Math.PI) / 180;
+            const cos = Math.cos(rad);
+            const sin = Math.sin(rad);
+
+            let hitCount = 0;
+            for (let d = 6; d <= maxDist; d += 2) {
+              const qx = Math.round(x + d * cos);
+              const qy = Math.round(y + d * sin);
+              if (qx < 0 || qx >= W || qy < 0 || qy >= H) break;
+              if (binary[qy * W + qx] === 1) {
+                hitCount++;
+              } else {
+                let nearHit = false;
+                for (let dy = -1; dy <= 1; dy++) {
+                  for (let dx = -1; dx <= 1; dx++) {
+                    const nqy = qy + dy;
+                    const nqx = qx + dx;
+                    if (nqx >= 0 && nqx < W && nqy >= 0 && nqy < H && binary[nqy * W + nqx] === 1) {
+                      nearHit = true;
+                      break;
+                    }
+                  }
+                  if (nearHit) break;
+                }
+                if (nearHit) hitCount++;
+                else if (d > 14) break;
+              }
+            }
+            rayScores[r] = hitCount;
+          }
+
+          let peak1 = -1, peakScore1 = 0;
+          let peak2 = -1, peakScore2 = 0;
+
+          for (let r = 0; r < rayDirections; r++) {
+            if (rayScores[r] > peakScore1) {
+              peakScore1 = rayScores[r];
+              peak1 = r;
+            }
+          }
+
+          if (peakScore1 < 8) continue;
+
+          for (let r = 0; r < rayDirections; r++) {
+            const angleDiff = Math.abs(r - peak1) * 10;
+            const circDiff = Math.min(angleDiff, 360 - angleDiff);
+            if (circDiff >= 18 && circDiff <= 170) {
+              if (rayScores[r] > peakScore2) {
+                peakScore2 = rayScores[r];
+                peak2 = r;
+              }
+            }
+          }
+
+          if (peakScore2 < 7) continue;
+
+          const angleSeparation = Math.min(Math.abs(peak2 - peak1) * 10, 360 - Math.abs(peak2 - peak1) * 10);
+          const score = (peakScore1 + peakScore2) * Math.sin((angleSeparation * Math.PI) / 180);
+
+          if (score > maxScore) {
+            maxScore = score;
+            bestCandidate = {
+              x,
+              y,
+              ray1Angle: peak1 * 10,
+              ray2Angle: peak2 * 10,
+              score,
+            };
+          }
+        }
+      }
+
+      if (!bestCandidate) return null;
+
+      const svgX = (bestCandidate.x / W) * 1000;
+      const svgY = (bestCandidate.y / H) * 700;
+
+      // Invert Y angle to SVG geometry
+      const mappedRay1 = (360 - bestCandidate.ray1Angle + 360) % 360;
+      const mappedRay2 = (360 - bestCandidate.ray2Angle + 360) % 360;
+
+      return {
+        vertexX: Math.round(svgX),
+        vertexY: Math.round(svgY),
+        ray1Angle: Math.round(mappedRay1),
+        ray2Angle: Math.round(mappedRay2),
+      };
+    }
+
+    // Auto Detect Button Handler
+    autoDetectBtn?.addEventListener('click', () => {
+      if (!uploadedPreviewImg || !uploadedPreviewImg.src || uploadedPreviewImg.classList.contains('hidden')) {
+        alert('Please upload an image or PDF first!');
+        return;
+      }
+
+      const scanner = document.getElementById('ai-scanner-line');
+      const toast = document.getElementById('ai-status-toast');
+      const toastMsg = document.getElementById('ai-toast-msg');
+
+      if (scanner) scanner.classList.remove('hidden');
+      if (autoDetectSpinner) autoDetectSpinner.classList.remove('hidden');
+      if (autoDetectIcon) autoDetectIcon.classList.add('hidden');
+      if (autoDetectText) autoDetectText.textContent = 'Scanning diagram...';
+
+      let pos = 0;
+      const sweep = setInterval(() => {
+        pos = (pos + 6) % 100;
+        if (scanner) scanner.style.top = `${pos}%`;
+      }, 40);
+
+      setTimeout(() => {
+        clearInterval(sweep);
+        if (scanner) scanner.classList.add('hidden');
+        if (autoDetectSpinner) autoDetectSpinner.classList.add('hidden');
+        if (autoDetectIcon) autoDetectIcon.classList.remove('hidden');
+        if (autoDetectText) autoDetectText.textContent = 'AI Auto-Detect Angle';
+
+        const result = analyzeDiagramForAngle(uploadedPreviewImg);
+        if (result) {
+          origin.x = Math.max(100, Math.min(900, result.vertexX));
+          origin.y = Math.max(100, Math.min(600, result.vertexY));
+          angle1 = result.ray1Angle;
+          angle2 = result.ray2Angle;
+          renderProtractor();
+
+          if (toast && toastMsg) {
+            const deg = getMeasuredAngle().toFixed(1);
+            toastMsg.textContent = `✨ Angle detected: ${deg}°! Drag handles to fine-tune.`;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+            setTimeout(() => {
+              toast.classList.add('hidden');
+              toast.classList.remove('flex');
+            }, 4500);
+          }
+        } else {
+          // Centered fallback
+          origin.x = 500;
+          origin.y = mode === '360' ? 350 : 440;
+          renderProtractor();
+
+          if (toast && toastMsg) {
+            toastMsg.textContent = 'Lines detected! Centered protractor on diagram — drag handles to align.';
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+            setTimeout(() => {
+              toast.classList.add('hidden');
+              toast.classList.remove('flex');
+            }, 4000);
+          }
+        }
+      }, 700);
     });
 
     // Helper: Normalize angle to 0..360
