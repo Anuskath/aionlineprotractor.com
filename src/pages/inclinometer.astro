@@ -74,12 +74,12 @@ const jsonLd = {
       <!-- Sensor Permission Button for iOS / Android -->
       <button
         id="sensor-perm-btn"
-        class="px-5 py-2.5 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 text-xs font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
+        class="w-full sm:w-auto min-h-[44px] px-6 py-3 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 text-sm font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs active:scale-98"
       >
         Enable Device Motion Sensors
       </button>
-      <p id="sensor-note" class="text-[11px] text-neutral-400 text-center max-w-sm">
-        On mobile, click to activate the internal gyroscope/accelerometer. On desktop, drag the slider below to test angles.
+      <p id="sensor-note" class="text-[11px] text-neutral-500 dark:text-neutral-400 text-center max-w-sm">
+        On mobile, tap above to activate gyroscope/accelerometer. (Haptic vibration buzzes when reaching 0° level).
       </p>
 
       <!-- Desktop manual slider fallback -->
@@ -106,6 +106,8 @@ const jsonLd = {
     const manualSlider = document.getElementById('manual-slider');
     const sliderVal = document.getElementById('slider-val');
 
+    let wasLevel = false;
+
     function updateAngle(angle) {
       const rounded = Math.abs(angle).toFixed(1);
       if (tiltDeg) tiltDeg.textContent = rounded;
@@ -117,9 +119,17 @@ const jsonLd = {
         spiritBubble.style.transform = `translateX(${translateX}px)`;
       }
 
-      // Status
+      // Status & Haptics
+      const isNowLevel = Math.abs(angle) < 0.8;
+      if (isNowLevel && !wasLevel && 'vibrate' in navigator) {
+        try {
+          navigator.vibrate(35);
+        } catch (err) {}
+      }
+      wasLevel = isNowLevel;
+
       if (levelStatus) {
-        if (Math.abs(angle) < 0.8) {
+        if (isNowLevel) {
           levelStatus.textContent = 'Perfect Level (0°)';
           levelStatus.className = 'inline-block mt-2 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900';
         } else {

@@ -48,10 +48,13 @@ const jsonLd = {
 
         <div
           id="tp-canvas-wrap"
-          class="relative w-full h-[500px] rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 overflow-hidden select-none cursor-crosshair flex items-center justify-center"
+          class="relative w-full h-[340px] xs:h-[380px] sm:h-[460px] md:h-[520px] rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 overflow-hidden select-none cursor-crosshair flex items-center justify-center touch-none shadow-xs"
         >
+          <!-- Subtle Grid Background -->
+          <div class="absolute inset-0 bg-[radial-gradient(#d4d4d4_1px,transparent_1px)] dark:bg-[radial-gradient(#262626_1px,transparent_1px)] [background-size:20px_20px] opacity-60 pointer-events-none"></div>
+
           <img id="tp-bg-img" class="absolute inset-0 w-full h-full object-contain pointer-events-none hidden opacity-80" alt="Reference background" />
-          <svg id="tp-svg" class="absolute inset-0 w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="none">
+          <svg id="tp-svg" class="absolute inset-0 w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="none" style="touch-action: none;">
             <g id="tp-shapes"></g>
           </svg>
         </div>
@@ -65,18 +68,18 @@ const jsonLd = {
           </span>
 
           <div class="flex items-baseline gap-2">
-            <span id="tp-angle-val" class="text-5xl font-black tracking-tight font-mono text-neutral-950 dark:text-white">
+            <span id="tp-angle-val" class="text-4xl sm:text-5xl font-black tracking-tight font-mono text-neutral-950 dark:text-white">
               0.0
             </span>
             <span class="text-3xl font-light text-neutral-400">°</span>
           </div>
 
           <div class="grid grid-cols-2 gap-3 pt-3 border-t border-neutral-100 dark:border-neutral-800 text-xs font-mono">
-            <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl">
+            <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl border border-neutral-100 dark:border-neutral-800/80">
               <span class="text-neutral-500 block mb-1">Radians</span>
               <span id="tp-rad-val" class="font-bold text-neutral-900 dark:text-white">0.000 rad</span>
             </div>
-            <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl">
+            <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl border border-neutral-100 dark:border-neutral-800/80">
               <span class="text-neutral-500 block mb-1">Length |BA|</span>
               <span id="tp-len-ba" class="font-bold text-neutral-900 dark:text-white">0 px</span>
             </div>
@@ -136,16 +139,28 @@ const jsonLd = {
       render();
     });
 
-    svg?.addEventListener('click', (e) => {
+    function placePointFromClientCoords(clientX, clientY) {
+      if (!svg) return;
       if (points.length >= 3) {
         points = [];
       }
       const rect = svg.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 1000;
-      const y = ((e.clientY - rect.top) / rect.height) * 600;
-      points.push({ x: Math.round(x), y: Math.round(y) });
+      const x = ((clientX - rect.left) / rect.width) * 1000;
+      const y = ((clientY - rect.top) / rect.height) * 600;
+      points.push({
+        x: Math.round(Math.max(10, Math.min(990, x))),
+        y: Math.round(Math.max(10, Math.min(590, y)))
+      });
       render();
+    }
+
+    svg?.addEventListener('pointerdown', (e) => {
+      placePointFromClientCoords(e.clientX, e.clientY);
+      if (e.cancelable) e.preventDefault();
     });
+
+    // Theme change listener
+    window.addEventListener('theme-change', render);
 
     function render() {
       if (!shapes) return;

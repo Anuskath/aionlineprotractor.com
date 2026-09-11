@@ -96,7 +96,7 @@ const {
       <!-- Main Interactive Protractor Area -->
       <div
         id="canvas-wrapper"
-        class="relative w-full h-[450px] sm:h-[540px] md:h-[600px] rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 overflow-hidden shadow-sm select-none touch-none crosshair-cursor flex items-center justify-center"
+        class="relative w-full h-[360px] xs:h-[420px] sm:h-[500px] md:h-[560px] lg:h-[600px] rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 overflow-hidden shadow-xs select-none touch-none crosshair-cursor flex items-center justify-center"
       >
         <!-- Background Image layer -->
         <img
@@ -114,25 +114,27 @@ const {
           class="absolute w-full h-full"
           viewBox="0 0 1000 700"
           preserveAspectRatio="xMidYMid meet"
+          style="touch-action: none;"
         >
           <!-- Dynamic Protractor Content rendered by client JS -->
           <g id="protractor-group"></g>
         </svg>
 
         <!-- Instructions Overlay Helper on Hover/Touch -->
-        <div class="absolute bottom-3 left-3 bg-neutral-900/80 dark:bg-black/80 backdrop-blur-xs text-white text-[11px] px-3 py-1.5 rounded-lg pointer-events-none flex items-center gap-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          Drag Green handle for Ray 1 • Drag Blue handle for Ray 2 • Drag Center to move
+        <div class="absolute bottom-3 left-3 right-3 sm:right-auto bg-neutral-900/85 dark:bg-black/90 backdrop-blur-xs text-white text-[10px] sm:text-[11px] px-3 py-1.5 rounded-lg pointer-events-none flex items-center gap-2 max-w-fit shadow-md">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
+          <span class="hidden sm:inline">Drag Green handle for Ray 1 • Drag Blue handle for Ray 2 • Drag Center to move</span>
+          <span class="sm:hidden">Drag Green/Blue rays or Center vertex</span>
         </div>
       </div>
 
       <!-- Quick Preset Angle Buttons -->
-      <div class="flex flex-wrap items-center gap-1.5 p-3 rounded-xl bg-neutral-100/70 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 text-xs">
-        <span class="text-neutral-500 font-mono text-[11px] mr-1">Quick Angles:</span>
+      <div class="flex items-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-neutral-100/70 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 text-xs overflow-x-auto no-scrollbar">
+        <span class="text-neutral-500 font-mono text-[11px] mr-1 shrink-0">Quick:</span>
         {['30°', '45°', '60°', '90°', '120°', '135°', '180°', '270°', '360°'].map((angle) => (
           <button
             data-preset={angle.replace('°', '')}
-            class="preset-angle-btn px-2.5 py-1 font-mono font-medium rounded-md bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
+            class="preset-angle-btn shrink-0 px-2.5 py-1.5 min-h-[32px] font-mono font-medium rounded-md bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
           >
             {angle}
           </button>
@@ -339,9 +341,20 @@ const {
       if (!group) return;
       group.innerHTML = '';
 
+      const isDark = document.documentElement.classList.contains('dark');
       const is360 = mode === '360';
       const measuredAngle = getMeasuredAngle();
       const currentRadius = radius;
+
+      // Theme-adaptive colors
+      const discBg = isDark ? 'rgba(18, 18, 20, 0.88)' : 'rgba(255, 255, 255, 0.90)';
+      const discBorder = isDark ? '#3f3f46' : '#a3a3a3';
+      const majorTickColor = isDark ? '#f4f4f5' : '#171717';
+      const minorTickColor = isDark ? '#71717a' : '#737373';
+      const majorTextColor = isDark ? '#ffffff' : '#171717';
+      const innerTextColor = isDark ? '#a1a1aa' : '#525252';
+      const centerFill = isDark ? '#ffffff' : '#171717';
+      const centerStroke = isDark ? '#18181b' : '#ffffff';
 
       // 1. Semi-transparent background disc / semicircle
       let bgPath = '';
@@ -353,11 +366,11 @@ const {
 
       const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       pathElem.setAttribute('d', bgPath);
-      pathElem.setAttribute('fill', 'currentColor');
-      pathElem.setAttribute('class', 'text-white/80 dark:text-neutral-900/80 backdrop-blur-md');
-      pathElem.setAttribute('stroke', '#737373');
+      pathElem.setAttribute('fill', discBg);
+      pathElem.setAttribute('stroke', discBorder);
       pathElem.setAttribute('stroke-width', '1.5');
       pathElem.setAttribute('opacity', opacity.toString());
+      pathElem.setAttribute('style', 'backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);');
       group.appendChild(pathElem);
 
       // 2. Degree ticks and labels
@@ -378,8 +391,7 @@ const {
         tick.setAttribute('y1', pOuter.y.toString());
         tick.setAttribute('x2', pInner.x.toString());
         tick.setAttribute('y2', pInner.y.toString());
-        tick.setAttribute('stroke', isTen ? '#171717' : '#737373');
-        tick.setAttribute('class', isTen ? 'dark:stroke-neutral-200' : 'dark:stroke-neutral-500');
+        tick.setAttribute('stroke', isTen ? majorTickColor : minorTickColor);
         tick.setAttribute('stroke-width', isTen ? '1.5' : '1');
         group.appendChild(tick);
 
@@ -391,10 +403,10 @@ const {
           text.setAttribute('y', (pText.y + 4).toString());
           text.setAttribute('text-anchor', 'middle');
           text.setAttribute('font-size', '11');
-          text.setAttribute('font-family', 'monospace');
+          text.setAttribute('font-family', 'ui-monospace, monospace');
           text.setAttribute('font-weight', '600');
-          text.setAttribute('fill', '#171717');
-          text.setAttribute('class', 'dark:fill-neutral-300 select-none');
+          text.setAttribute('fill', majorTextColor);
+          text.setAttribute('style', 'user-select: none; pointer-events: none;');
           text.textContent = deg.toString();
           group.appendChild(text);
 
@@ -407,9 +419,9 @@ const {
             textInner.setAttribute('y', (pTextInner.y + 3).toString());
             textInner.setAttribute('text-anchor', 'middle');
             textInner.setAttribute('font-size', '9');
-            textInner.setAttribute('font-family', 'monospace');
-            textInner.setAttribute('fill', '#737373');
-            textInner.setAttribute('class', 'dark:fill-neutral-400 select-none');
+            textInner.setAttribute('font-family', 'ui-monospace, monospace');
+            textInner.setAttribute('fill', innerTextColor);
+            textInner.setAttribute('style', 'user-select: none; pointer-events: none;');
             textInner.textContent = innerDeg.toString();
             group.appendChild(textInner);
           }
@@ -417,8 +429,8 @@ const {
       }
 
       // 3. Highlighted Angle Sector Wedge (Pie shape between Ray 1 and Ray 2)
-      const pRay1 = polarToCartesian(origin.x, origin.y, currentRadius * 0.9, angle1);
-      const pRay2 = polarToCartesian(origin.x, origin.y, currentRadius * 0.9, angle2);
+      const pRay1 = polarToCartesian(origin.x, origin.y, currentRadius * 0.95, angle1);
+      const pRay2 = polarToCartesian(origin.x, origin.y, currentRadius * 0.95, angle2);
 
       const sectorArcRadius = currentRadius * 0.35;
       const pArc1 = polarToCartesian(origin.x, origin.y, sectorArcRadius, angle1);
@@ -432,68 +444,140 @@ const {
       const sectorPath = `M ${origin.x} ${origin.y} L ${pArc1.x} ${pArc1.y} A ${sectorArcRadius} ${sectorArcRadius} 0 ${largeArcFlag} 0 ${pArc2.x} ${pArc2.y} Z`;
       const sectorElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       sectorElem.setAttribute('d', sectorPath);
-      sectorElem.setAttribute('fill', 'rgba(59, 130, 246, 0.25)'); // Blue tint
+      sectorElem.setAttribute('fill', isDark ? 'rgba(59, 130, 246, 0.28)' : 'rgba(59, 130, 246, 0.22)');
       sectorElem.setAttribute('stroke', '#3b82f6');
       sectorElem.setAttribute('stroke-width', '1.5');
+      sectorElem.setAttribute('style', 'pointer-events: none;');
       group.appendChild(sectorElem);
 
       // 4. Ray 1 (Base Line - Emerald/Green)
+      // Invisible wide hit line for mobile touch along ray length
+      const ray1HitLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      ray1HitLine.setAttribute('x1', origin.x.toString());
+      ray1HitLine.setAttribute('y1', origin.y.toString());
+      ray1HitLine.setAttribute('x2', pRay1.x.toString());
+      ray1HitLine.setAttribute('y2', pRay1.y.toString());
+      ray1HitLine.setAttribute('stroke', 'transparent');
+      ray1HitLine.setAttribute('stroke-width', '36');
+      ray1HitLine.setAttribute('data-handle', 'ray1');
+      ray1HitLine.setAttribute('style', 'cursor: grab; pointer-events: stroke; -webkit-tap-highlight-color: transparent;');
+      group.appendChild(ray1HitLine);
+
+      // Visual Ray 1 Line
       const ray1Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       ray1Line.setAttribute('x1', origin.x.toString());
       ray1Line.setAttribute('y1', origin.y.toString());
       ray1Line.setAttribute('x2', pRay1.x.toString());
       ray1Line.setAttribute('y2', pRay1.y.toString());
       ray1Line.setAttribute('stroke', '#10b981');
-      ray1Line.setAttribute('stroke-width', '3');
+      ray1Line.setAttribute('stroke-width', '3.5');
       ray1Line.setAttribute('stroke-linecap', 'round');
+      ray1Line.setAttribute('style', 'pointer-events: none;');
       group.appendChild(ray1Line);
 
-      // Ray 1 draggable handle
+      // Invisible Hit Target for Ray 1 Handle (enlarged for mobile thumbs)
+      const ray1HitCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      ray1HitCircle.setAttribute('cx', pRay1.x.toString());
+      ray1HitCircle.setAttribute('cy', pRay1.y.toString());
+      ray1HitCircle.setAttribute('r', '38');
+      ray1HitCircle.setAttribute('fill', 'transparent');
+      ray1HitCircle.setAttribute('data-handle', 'ray1');
+      ray1HitCircle.setAttribute('style', 'cursor: grab; pointer-events: all; -webkit-tap-highlight-color: transparent;');
+      group.appendChild(ray1HitCircle);
+
+      // Visual Ray 1 Handle
       const ray1Handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       ray1Handle.setAttribute('cx', pRay1.x.toString());
       ray1Handle.setAttribute('cy', pRay1.y.toString());
-      ray1Handle.setAttribute('r', '10');
+      ray1Handle.setAttribute('r', activeDrag === 'ray1' ? '14' : '11');
       ray1Handle.setAttribute('fill', '#10b981');
-      ray1Handle.setAttribute('stroke', '#ffffff');
+      ray1Handle.setAttribute('stroke', isDark ? '#18181b' : '#ffffff');
       ray1Handle.setAttribute('stroke-width', '2.5');
-      ray1Handle.setAttribute('class', 'grab-cursor drop-shadow-md');
-      ray1Handle.setAttribute('data-handle', 'ray1');
+      ray1Handle.setAttribute('style', 'pointer-events: none; transition: r 0.15s ease;');
+      ray1Handle.setAttribute('class', 'drop-shadow-md');
       group.appendChild(ray1Handle);
 
       // 5. Ray 2 (Measuring Arm - Blue)
+      // Invisible wide hit line for mobile touch along ray length
+      const ray2HitLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      ray2HitLine.setAttribute('x1', origin.x.toString());
+      ray2HitLine.setAttribute('y1', origin.y.toString());
+      ray2HitLine.setAttribute('x2', pRay2.x.toString());
+      ray2HitLine.setAttribute('y2', pRay2.y.toString());
+      ray2HitLine.setAttribute('stroke', 'transparent');
+      ray2HitLine.setAttribute('stroke-width', '36');
+      ray2HitLine.setAttribute('data-handle', 'ray2');
+      ray2HitLine.setAttribute('style', 'cursor: grab; pointer-events: stroke; -webkit-tap-highlight-color: transparent;');
+      group.appendChild(ray2HitLine);
+
+      // Visual Ray 2 Line
       const ray2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       ray2Line.setAttribute('x1', origin.x.toString());
       ray2Line.setAttribute('y1', origin.y.toString());
       ray2Line.setAttribute('x2', pRay2.x.toString());
       ray2Line.setAttribute('y2', pRay2.y.toString());
       ray2Line.setAttribute('stroke', '#3b82f6');
-      ray2Line.setAttribute('stroke-width', '3');
+      ray2Line.setAttribute('stroke-width', '3.5');
       ray2Line.setAttribute('stroke-linecap', 'round');
+      ray2Line.setAttribute('style', 'pointer-events: none;');
       group.appendChild(ray2Line);
 
-      // Ray 2 draggable handle
+      // Invisible Hit Target for Ray 2 Handle (enlarged for mobile thumbs)
+      const ray2HitCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      ray2HitCircle.setAttribute('cx', pRay2.x.toString());
+      ray2HitCircle.setAttribute('cy', pRay2.y.toString());
+      ray2HitCircle.setAttribute('r', '38');
+      ray2HitCircle.setAttribute('fill', 'transparent');
+      ray2HitCircle.setAttribute('data-handle', 'ray2');
+      ray2HitCircle.setAttribute('style', 'cursor: grab; pointer-events: all; -webkit-tap-highlight-color: transparent;');
+      group.appendChild(ray2HitCircle);
+
+      // Visual Ray 2 Handle
       const ray2Handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       ray2Handle.setAttribute('cx', pRay2.x.toString());
       ray2Handle.setAttribute('cy', pRay2.y.toString());
-      ray2Handle.setAttribute('r', '10');
+      ray2Handle.setAttribute('r', activeDrag === 'ray2' ? '14' : '11');
       ray2Handle.setAttribute('fill', '#3b82f6');
-      ray2Handle.setAttribute('stroke', '#ffffff');
+      ray2Handle.setAttribute('stroke', isDark ? '#18181b' : '#ffffff');
       ray2Handle.setAttribute('stroke-width', '2.5');
-      ray2Handle.setAttribute('class', 'grab-cursor drop-shadow-md');
-      ray2Handle.setAttribute('data-handle', 'ray2');
+      ray2Handle.setAttribute('style', 'pointer-events: none; transition: r 0.15s ease;');
+      ray2Handle.setAttribute('class', 'drop-shadow-md');
       group.appendChild(ray2Handle);
 
       // 6. Center Origin Vertex handle
+      // Invisible Hit Target for Center Handle
+      const centerHitCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      centerHitCircle.setAttribute('cx', origin.x.toString());
+      centerHitCircle.setAttribute('cy', origin.y.toString());
+      centerHitCircle.setAttribute('r', '40');
+      centerHitCircle.setAttribute('fill', 'transparent');
+      centerHitCircle.setAttribute('data-handle', 'center');
+      centerHitCircle.setAttribute('style', 'cursor: move; pointer-events: all; -webkit-tap-highlight-color: transparent;');
+      group.appendChild(centerHitCircle);
+
+      // Visual Center Handle
       const centerHandle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       centerHandle.setAttribute('cx', origin.x.toString());
       centerHandle.setAttribute('cy', origin.y.toString());
-      centerHandle.setAttribute('r', '9');
-      centerHandle.setAttribute('fill', '#171717');
-      centerHandle.setAttribute('stroke', '#ffffff');
+      centerHandle.setAttribute('r', activeDrag === 'center' ? '13' : '10');
+      centerHandle.setAttribute('fill', centerFill);
+      centerHandle.setAttribute('stroke', centerStroke);
       centerHandle.setAttribute('stroke-width', '2.5');
-      centerHandle.setAttribute('class', 'grab-cursor drop-shadow-md dark:fill-white dark:stroke-neutral-900');
-      centerHandle.setAttribute('data-handle', 'center');
+      centerHandle.setAttribute('style', 'pointer-events: none; transition: r 0.15s ease;');
+      centerHandle.setAttribute('class', 'drop-shadow-md');
       group.appendChild(centerHandle);
+
+      // Center crosshair ring
+      const centerRing = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      centerRing.setAttribute('cx', origin.x.toString());
+      centerRing.setAttribute('cy', origin.y.toString());
+      centerRing.setAttribute('r', '22');
+      centerRing.setAttribute('fill', 'none');
+      centerRing.setAttribute('stroke', isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)');
+      centerRing.setAttribute('stroke-width', '1');
+      centerRing.setAttribute('stroke-dasharray', '2,2');
+      centerRing.setAttribute('style', 'pointer-events: none;');
+      group.appendChild(centerRing);
 
       // Update Live Readout Elements
       updateReadouts(measuredAngle);
@@ -568,6 +652,9 @@ const {
       if (e.touches && e.touches.length > 0) {
         pt.x = e.touches[0].clientX;
         pt.y = e.touches[0].clientY;
+      } else if (e.changedTouches && e.changedTouches.length > 0) {
+        pt.x = e.changedTouches[0].clientX;
+        pt.y = e.changedTouches[0].clientY;
       } else {
         pt.x = e.clientX;
         pt.y = e.clientY;
@@ -582,18 +669,20 @@ const {
     // Pointer Event Listeners
     function onPointerDown(e) {
       const target = e.target;
-      const handle = target.getAttribute('data-handle');
+      const handle = target.getAttribute ? target.getAttribute('data-handle') : null;
       if (handle) {
         activeDrag = handle;
         const coords = getSvgCoordinates(e);
         dragStart = coords;
         initialOrigin = { ...origin };
-        e.preventDefault();
+        renderProtractor();
+        if (e.cancelable) e.preventDefault();
       }
     }
 
     function onPointerMove(e) {
       if (!activeDrag) return;
+      if (e.cancelable) e.preventDefault();
       const coords = getSvgCoordinates(e);
 
       if (activeDrag === 'center') {
@@ -621,25 +710,38 @@ const {
       }
 
       renderProtractor();
-      e.preventDefault();
     }
 
     function onPointerUp() {
-      activeDrag = null;
+      if (activeDrag) {
+        activeDrag = null;
+        renderProtractor();
+      }
     }
 
-    // Register Pointer / Touch Listeners
-    svg?.addEventListener('mousedown', onPointerDown);
-    window.addEventListener('mousemove', onPointerMove);
-    window.addEventListener('mouseup', onPointerUp);
+    // Modern Pointer Events + Touch Event fallback
+    svg?.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
 
+    // Touch event fallback for mobile Safari
     svg?.addEventListener('touchstart', onPointerDown, { passive: false });
     window.addEventListener('touchmove', onPointerMove, { passive: false });
     window.addEventListener('touchend', onPointerUp);
+    window.addEventListener('touchcancel', onPointerUp);
+
+    // Dynamic Theme Change Listeners
+    window.addEventListener('theme-change', () => {
+      renderProtractor();
+    });
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      renderProtractor();
+    });
 
     // Preset Angle buttons
     document.querySelectorAll('.preset-angle-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', () => {
         const targetDeg = parseFloat(btn.getAttribute('data-preset') || '45');
         angle1 = 0;
         angle2 = targetDeg;
@@ -670,7 +772,7 @@ const {
 
     // Reset Button
     resetBtn?.addEventListener('click', () => {
-      origin = { x: 500, y: 440 };
+      origin = { x: 500, y: mode === '360' ? 350 : 440 };
       angle1 = 0;
       angle2 = 45;
       radius = 260;
