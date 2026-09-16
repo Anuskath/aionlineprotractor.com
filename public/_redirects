@@ -1,0 +1,139 @@
+# Permanent 301 Redirects for Canonical Structure and 404 Prevention
+
+# Legacy Aliases
+/about-us /about/ 301
+/about-us/ /about/ 301
+/contact-us /contact/ 301
+/contact-us/ /contact/ 301
+/terms-and-conditions /terms/ 301
+/terms-and-conditions/ /terms/ 301
+
+# Language roots without trailing slash
+/es /es/ 301
+/pt /pt/ 301
+/fr /fr/ 301
+/de /de/ 301
+/ja /ja/ 301
+/ko /ko/ 301
+/it /it/ 301
+
+# Non-existent localized tool subpages (Redirect to Canonical English Tools)
+/es/360-protractor /360-protractor/ 301
+/es/360-protractor/ /360-protractor/ 301
+/pt/360-protractor /360-protractor/ 301
+/pt/360-protractor/ /360-protractor/ 301
+/fr/360-protractor /360-protractor/ 301
+/fr/360-protractor/ /360-protractor/ 301
+/de/360-protractor /360-protractor/ 301
+/de/360-protractor/ /360-protractor/ 301
+/ja/360-protractor /360-protractor/ 301
+/ja/360-protractor/ /360-protractor/ 301
+/ko/360-protractor /360-protractor/ 301
+/ko/360-protractor/ /360-protractor/ 301
+/it/360-protractor /360-protractor/ 301
+/it/360-protractor/ /360-protractor/ 301
+
+/es/measure-angle-image /measure-angle-image/ 301
+/es/measure-angle-image/ /measure-angle-image/ 301
+/pt/measure-angle-image /measure-angle-image/ 301
+/pt/measure-angle-image/ /measure-angle-image/ 301
+/fr/measure-angle-image /measure-angle-image/ 301
+/fr/measure-angle-image/ /measure-angle-image/ 301
+/de/measure-angle-image /measure-angle-image/ 301
+/de/measure-angle-image/ /measure-angle-image/ 301
+/ja/measure-angle-image /measure-angle-image/ 301
+/ja/measure-angle-image/ /measure-angle-image/ 301
+/ko/measure-angle-image /measure-angle-image/ 301
+/ko/measure-angle-image/ /measure-angle-image/ 301
+/it/measure-angle-image /measure-angle-image/ 301
+/it/measure-angle-image/ /measure-angle-image/ 301
+
+/es/three-point-angle /three-point-angle/ 301
+/es/three-point-angle/ /three-point-angle/ 301
+/pt/three-point-angle /three-point-angle/ 301
+/pt/three-point-angle/ /three-point-angle/ 301
+/fr/three-point-angle /three-point-angle/ 301
+/fr/three-point-angle/ /three-point-angle/ 301
+/de/three-point-angle /three-point-angle/ 301
+/de/three-point-angle/ /three-point-angle/ 301
+/ja/three-point-angle /three-point-angle/ 301
+/ja/three-point-angle/ /three-point-angle/ 301
+/ko/three-point-angle /three-point-angle/ 301
+/ko/three-point-angle/ /three-point-angle/ 301
+/it/three-point-angle /three-point-angle/ 301
+/it/three-point-angle/ /three-point-angle/ 301
+
+/es/inclinometer /inclinometer/ 301
+/es/inclinometer/ /inclinometer/ 301
+/pt/inclinometer /inclinometer/ 301
+/pt/inclinometer/ /inclinometer/ 301
+/fr/inclinometer /inclinometer/ 301
+/fr/inclinometer/ /inclinometer/ 301
+/de/inclinometer /inclinometer/ 301
+/de/inclinometer/ /inclinometer/ 301
+/ja/inclinometer /inclinometer/ 301
+/ja/inclinometer/ /inclinometer/ 301
+/ko/inclinometer /inclinometer/ 301
+/ko/inclinometer/ /inclinometer/ 301
+/it/inclinometer /inclinometer/ 301
+/it/inclinometer/ /inclinometer/ 301
+
+/es/about /about/ 301
+/es/about/ /about/ 301
+/pt/about /about/ 301
+/pt/about/ /about/ 301
+/fr/about /about/ 301
+/fr/about/ /about/ 301
+/de/about /about/ 301
+/de/about/ /about/ 301
+/ja/about /about/ 301
+/ja/about/ /about/ 301
+/ko/about /about/ 301
+/ko/about/ /about/ 301
+/it/about /about/ 301
+/it/about/ /about/ 301
+
+/es/contact /contact/ 301
+/es/contact/ /contact/ 301
+/pt/contact /contact/ 301
+/pt/contact/ /contact/ 301
+/fr/contact /contact/ 301
+/fr/contact/ /contact/ 301
+/de/contact /contact/ 301
+/de/contact/ /contact/ 301
+/ja/contact /contact/ 301
+/ja/contact/ /contact/ 301
+/ko/contact /contact/ 301
+/ko/contact/ /contact/ 301
+/it/contact /contact/ 301
+/it/contact/ /contact/ 301
+
+/es/privacy-policy /privacy-policy/ 301
+/es/privacy-policy/ /privacy-policy/ 301
+/pt/privacy-policy /privacy-policy/ 301
+/pt/privacy-policy/ /privacy-policy/ 301
+/fr/privacy-policy /privacy-policy/ 301
+/fr/privacy-policy/ /privacy-policy/ 301
+/de/privacy-policy /privacy-policy/ 301
+/de/privacy-policy/ /privacy-policy/ 301
+/ja/privacy-policy /privacy-policy/ 301
+/ja/privacy-policy/ /privacy-policy/ 301
+/ko/privacy-policy /privacy-policy/ 301
+/ko/privacy-policy/ /privacy-policy/ 301
+/it/privacy-policy /privacy-policy/ 301
+/it/privacy-policy/ /privacy-policy/ 301
+
+/es/terms /terms/ 301
+/es/terms/ /terms/ 301
+/pt/terms /terms/ 301
+/pt/terms/ /terms/ 301
+/fr/terms /terms/ 301
+/fr/terms/ /terms/ 301
+/de/terms /terms/ 301
+/de/terms/ /terms/ 301
+/ja/terms /terms/ 301
+/ja/terms/ /terms/ 301
+/ko/terms /terms/ 301
+/ko/terms/ /terms/ 301
+/it/terms /terms/ 301
+/it/terms/ /terms/ 301

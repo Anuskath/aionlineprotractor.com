@@ -361,8 +361,11 @@ export function useTranslations(lang: string = DEFAULT_LANGUAGE): UIStrings {
 
 export function getLocalizedPath(path: string, lang: string = DEFAULT_LANGUAGE): string {
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  if (lang === DEFAULT_LANGUAGE) {
-    return cleanPath;
+  const normalized = cleanPath === '/' ? '/' : (cleanPath.endsWith('/') ? cleanPath : `${cleanPath}/`);
+  // Only the main protractor tool on the homepage ('/') is localized into /es/, /pt/, etc.
+  if (normalized === '/') {
+    return lang === DEFAULT_LANGUAGE ? '/' : `/${lang}/`;
   }
-  return `/${lang}${cleanPath === '/' ? '' : cleanPath}`;
+  // All other tools and company pages live at canonical root paths
+  return normalized;
 }

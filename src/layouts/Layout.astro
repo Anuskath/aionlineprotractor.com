@@ -27,7 +27,8 @@ const {
 } = Astro.props;
 
 const siteUrl = 'https://aionlineprotractor.com';
-const canonicalUrl = canonical.startsWith('http') ? canonical : `${siteUrl}${canonical}`;
+const canonicalBase = canonical.startsWith('http') ? canonical : `${siteUrl}${canonical}`;
+const canonicalUrl = canonicalBase.endsWith('/') ? canonicalBase : `${canonicalBase}/`;
 
 // Calculate root path for hreflang links
 const pathSegments = currentPath.split('/').filter(Boolean);
@@ -71,15 +72,24 @@ const currentOgLocale = OG_LOCALES[lang] || 'en_US';
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Hreflang Alternate Links for International SEO -->
-    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${normalizedPath}`} />
-    <link rel="alternate" hreflang="en" href={`${siteUrl}${normalizedPath}`} />
-    <link rel="alternate" hreflang="es" href={`${siteUrl}/es${normalizedPath === '/' ? '/' : normalizedPath}`} />
-    <link rel="alternate" hreflang="pt" href={`${siteUrl}/pt${normalizedPath === '/' ? '/' : normalizedPath}`} />
-    <link rel="alternate" hreflang="fr" href={`${siteUrl}/fr${normalizedPath === '/' ? '/' : normalizedPath}`} />
-    <link rel="alternate" hreflang="de" href={`${siteUrl}/de${normalizedPath === '/' ? '/' : normalizedPath}`} />
-    <link rel="alternate" hreflang="ja" href={`${siteUrl}/ja${normalizedPath === '/' ? '/' : normalizedPath}`} />
-    <link rel="alternate" hreflang="ko" href={`${siteUrl}/ko${normalizedPath === '/' ? '/' : normalizedPath}`} />
-    <link rel="alternate" hreflang="it" href={`${siteUrl}/it${normalizedPath === '/' ? '/' : normalizedPath}`} />
+    {normalizedPath === '/' ? (
+      <>
+        <link rel="alternate" hreflang="x-default" href={`${siteUrl}/`} />
+        <link rel="alternate" hreflang="en" href={`${siteUrl}/`} />
+        <link rel="alternate" hreflang="es" href={`${siteUrl}/es/`} />
+        <link rel="alternate" hreflang="pt" href={`${siteUrl}/pt/`} />
+        <link rel="alternate" hreflang="fr" href={`${siteUrl}/fr/`} />
+        <link rel="alternate" hreflang="de" href={`${siteUrl}/de/`} />
+        <link rel="alternate" hreflang="ja" href={`${siteUrl}/ja/`} />
+        <link rel="alternate" hreflang="ko" href={`${siteUrl}/ko/`} />
+        <link rel="alternate" hreflang="it" href={`${siteUrl}/it/`} />
+      </>
+    ) : (
+      <>
+        <link rel="alternate" hreflang="x-default" href={`${siteUrl}${normalizedPath}`} />
+        <link rel="alternate" hreflang="en" href={`${siteUrl}${normalizedPath}`} />
+      </>
+    )}
 
     <!-- Open Graph / Social Meta -->
     <meta property="og:type" content="website" />
