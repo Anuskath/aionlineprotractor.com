@@ -92,7 +92,7 @@ export const SEO_DATA: Record<string, SEOMetadata> = {
   },
   pt: {
     title: 'Transferidor Online - Medidor de Ângulos Virtual Grátis',
-    description: 'Transferidor online e medidor de ângulos virtual gratuito para medir ângulos em graus e radianos. Modos 180° e 360°, envio de imagens e PDF.',
+    description: 'Transferidor online e medidor de ângulos virtual gratuito para medir ângulos em graus e radianos. Inclui modos 180° e 360°, envio de imagens, PDF e aula.',
     keywords: 'transferidor online, transferidor virtual, medir angulos online, transferidor 360 online, medidor de angulos, régua online angulo, transferidor virtual gratis',
     h1: 'Transferidor Online: Medição Digital de Ângulos com Precisão',
     lead: 'Meça ângulos online diretamente na tela do seu computador ou celular. Ajuste os braços interativos, envie plantas em PDF ou imagens e calcule graus, radianos e porcentagem de inclinação.',
@@ -197,7 +197,7 @@ export const SEO_DATA: Record<string, SEOMetadata> = {
   },
   ja: {
     title: 'オンライン分度器 - 無料の角度測定ツール・角度計算機',
-    description: '画面上で角度を正確に測れる無料のオンライン分度器。180度半円および360度全円モード、画像・PDFアップロード、AI自動角度検出対応。',
+    description: '画面上で角度を正確に測定できる無料のオンライン分度器＆角度測定ツール。180度半円および360度全円モード、画像・PDFの読み込み、学生の角度練習機能に対応。',
     keywords: 'オンライン分度器, 分度器 オンライン, 角度測定 ツール, 角度 計算, 360度 分度器 オンライン, 画像 角度 測定, 無料 分度器',
     h1: 'オンライン分度器：画面上で高精度に角度を測定',
     lead: 'ブラウザ上で直接角度を精密に測定できるデジタル分度器です。頂点やアームをドラッグして動かせるほか、画像やPDF図面を取り込んで角度を瞬時に割り出せます。',
@@ -232,7 +232,7 @@ export const SEO_DATA: Record<string, SEOMetadata> = {
   },
   ko: {
     title: '온라인 각도기 - 무료 각도 측정기 및 각도 계산 도구',
-    description: '화면에서 바로 각도를 정밀하게 측정할 수 있는 무료 온라인 각도기. 180도 반원 및 360도 전원 각도기, 이미지 및 PDF 업로드 측정 기능 지원.',
+    description: '화면에서 각도를 정확하게 측정하는 무료 온라인 각도기 및 각도 계산기. 180도 및 360도 모드, 이미지 및 PDF 업로드, 학생용 연습 기능 지원.',
     keywords: '온라인 각도기, 각도기 온라인, 각도 측정기, 각도 계산기, 360도 각도기, 이미지 각도 측정, 무료 각도기',
     h1: '온라인 각도기: 화면에서 정밀하게 각도 측정하기',
     lead: '웹 브라우저에서 직접 각도를 정확하게 측정해 보세요. 꼭짓점과 측정선을 드래그하여 도(°), 라디안(rad), 경사도를 즉시 계산할 수 있습니다.',
